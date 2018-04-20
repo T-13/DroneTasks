@@ -26,7 +26,7 @@ class MaPlayer:
         self.rate = 44100
         self.channels = 2
         self.format = pyaudio.paInt16
-        self.chunk = int(self.rate*0.2)
+        self.chunk = int(self.rate * 0.2)
 
         self.endCallback = None
         self.playingCallback = None
@@ -35,12 +35,12 @@ class MaPlayer:
         self.closeStream()
 
     # Start stream
-    def initStream(self, rate = 44100, channels = 2, format = pyaudio.paInt16, closeStream = True):
+    def initStream(self, rate=44100, channels=2, format=pyaudio.paInt16, closeStream=True):
         if closeStream:
             self.closeStream()
 
         self.rate = rate
-        self.chunk = int(self.rate*0.2)
+        self.chunk = int(self.rate * 0.2)
         self.format = format
         self.channels = channels
 
@@ -53,7 +53,7 @@ class MaPlayer:
     # Close stream
     def closeStream(self):
         # Close stream if opened
-        if self.stream != False:
+        if self.stream:
             self.notifyStop.clear()
             self.notifyPlay.clear()
 
@@ -69,7 +69,7 @@ class MaPlayer:
 
             self.playIndex = 0
 
-            if self.playThread != False:
+            if self.playThread:
                 if threading.current_thread() != self.playThread:
                     self.notifyPlay.set()
                     self.playThread.join()
@@ -87,7 +87,6 @@ class MaPlayer:
                        rate=self.mainData.frame_rate,
                        channels=self.mainData.channels,
                        format=self.p.get_format_from_width(self.mainData.sample_width))
-
 
     # Load new sound
     def loadSound(self, samples, changeStream=False, rate=44100, channels=2, format=pyaudio.paInt16):
@@ -116,13 +115,12 @@ class MaPlayer:
         if self.isPlaying:
             self.notifyPlay.set()
 
-
     # Function that plays the sound
     def playingFunction(self):
-        if self.stream != False:
+        if self.stream:
             self.isPlaying = True
-            while self.playIndex < self.sound.size and self.stream != False:
-                temp = self.sound[self.playIndex:self.playIndex+self.chunk:1]
+            while self.playIndex < self.sound.size and self.stream:
+                temp = self.sound[self.playIndex:self.playIndex + self.chunk:1]
                 self.stream.write(temp.tobytes())
 
                 if self.playingCallback and self.isPlaying:
@@ -140,20 +138,17 @@ class MaPlayer:
             if self.endCallback:
                 self.endCallback()
 
-
     def changeFreq(self, newFreq):
         if newFreq == self.rate:
             return
 
         self.rate = newFreq
         # open stream
-        newStream = self.p.open(format=self.format,
-                                  channels=self.channels,
-                                  rate=self.rate,
-                                  output=True)
+        newStream = self.p.open(
+            format=self.format, channels=self.channels, rate=self.rate, output=True)
         oldStream = None
 
-        if self.stream != False:
+        if self.stream:
             oldStream = self.stream
 
         self.stream = newStream
@@ -162,27 +157,27 @@ class MaPlayer:
             oldStream.stop_stream()
             oldStream.close()
 
-
     # Pause stream
     def pause(self):
-        if self.stream != False:
+        if self.stream:
             self.isPlaying = False
             self.notifyPlay.clear()
 
     # Continue stream
     def play(self):
-        if self.stream != False:
+        if self.stream:
             self.isPlaying = True
             self.notifyPlay.set()
 
     # Pauses recording and goes to beginning
     def stop(self):
         self.closeStream()
-        self.loadSound(self.mainData.get_array_of_samples(),
-                       changeStream=True,
-                       rate=self.rate,
-                       channels=self.channels,
-                       format=self.format)
+        self.loadSound(
+            self.mainData.get_array_of_samples(),
+            changeStream=True,
+            rate=self.rate,
+            channels=self.channels,
+            format=self.format)
         if self.endCallback:
             self.endCallback()
 
@@ -194,5 +189,3 @@ class MaPlayer:
         self.isPlaying = True
         self.hasStarted = True
         self.notifyPlay.set()
-
-

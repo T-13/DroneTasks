@@ -4,7 +4,7 @@ import os
 import numpy as np
 from MusicPlot import MusicPlot
 from PyQt5.QtCore import Qt, pyqtSignal, QObject
-from PyQt5.QtWidgets import QWidget, QPushButton, QGridLayout, QSlider, QFileDialog, QLabel, QTabWidget, QScrollArea, QVBoxLayout
+from PyQt5.QtWidgets import *
 from PpmGenerator import PpmGenerator
 from pydub import AudioSegment
 from Player import MaPlayer
@@ -44,12 +44,10 @@ class App(QWidget, QObject):
 
         self.initUI()
 
-
-
     def initUI(self):
         self.setWindowTitle(self.title)
         self.setGeometry(self.left, self.top, self.width, self.height)
-        self.resize(self.size()) # Make window unresizeable for user
+        self.resize(self.size())  # Make window unresizeable for user
 
         # Init main UI layouts
         self.mainUiGrud = QGridLayout()
@@ -80,10 +78,10 @@ class App(QWidget, QObject):
         LoadButton.clicked.connect(self.load)
         self.mainUiGrud.addWidget(LoadButton, 1, 0)
 
-        self.slider = QSlider(Qt.Horizontal) # Makes slider horizontal
+        self.slider = QSlider(Qt.Horizontal)  # Makes slider horizontal
         self.slider.updateGeometry()
         self.slider.sliderReleased.connect(self.timeChange)
-        self.mainUiGrud.addWidget(self.slider, 2,0,1,3)
+        self.mainUiGrud.addWidget(self.slider, 2, 0, 1, 3)
 
         self.mainUiGrud.addWidget(self.tabWidget, 3, 0, 1, 3)
 
@@ -95,7 +93,7 @@ class App(QWidget, QObject):
         tab1Scroll.setWidget(gridHolder)
         box1 = QVBoxLayout()
         box1.addWidget(tab1Scroll)
-        box1.setContentsMargins(0,0,0,0)
+        box1.setContentsMargins(0, 0, 0, 0)
 
         self.tab1.setLayout(box1)
 
@@ -108,8 +106,6 @@ class App(QWidget, QObject):
         box2.setContentsMargins(0, 0, 0, 0)
 
         self.tab2.setLayout(box2)
-
-
         self.show()
 
     # Loads sound from file
@@ -118,7 +114,7 @@ class App(QWidget, QObject):
         self.reset()
         # Open select file dialog with .mp3 and .wav fiter
         options = QFileDialog.Options()
-        fileP, _ = QFileDialog.getOpenFileName(self,"Select file", "",".mp3 (*.mp3);;.wav (*.wav)", options=options)
+        fileP, _ = QFileDialog.getOpenFileName(self, "Select file", "", ".mp3 (*.mp3);;.wav (*.wav)", options=options)
         # If file is selected
         if fileP:
             # Alert user of file loaded
@@ -228,7 +224,7 @@ class App(QWidget, QObject):
 
         # Update slider values to correctly sync with music time
         self.slider.setMinimum(0)
-        self.slider.setMaximum(len(self.time)-1)
+        self.slider.setMaximum(len(self.time) - 1)
         self.slider.setSingleStep(1)
 
     # Loads the graphs for tab1 from sound data
@@ -259,11 +255,11 @@ class App(QWidget, QObject):
     # Adds a graph of the passed chanel to UI
     def addChanel(self, data_time, data_samples):
         # Reduce data for memory and time saving We want
-        step = math.ceil(self.sound.frame_rate/4000)
-        temp = math.ceil(len(data_time)/step)
+        step = math.ceil(self.sound.frame_rate / 4000)
+        temp = math.ceil(len(data_time) / step)
         # If big file, reduce points to 55000
-        if  temp > 55000:
-            step = math.ceil(len(data_time)/55000)
+        if temp > 55000:
+            step = math.ceil(len(data_time) / 55000)
 
         # Create graph
         newgraph = MusicPlot()
@@ -271,5 +267,5 @@ class App(QWidget, QObject):
         newgraph.plot(data_time, data_samples, step)
         # Put graph onto UI
         self.graphs.append(newgraph)
-        self.graphGrid.addWidget(newgraph, self.numberOfGraphs,0 ,1,3)
+        self.graphGrid.addWidget(newgraph, self.numberOfGraphs, 0, 1, 3)
         self.numberOfGraphs += 1

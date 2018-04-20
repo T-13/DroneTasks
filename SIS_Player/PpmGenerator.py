@@ -23,7 +23,7 @@ class PpmGenerator(QWidget):
         # Assign parent app
         self.parent = parent
 
-        self.initUI()
+        self.init_ui()
 
     # Defines the UI of the widget
     def init_ui(self):
@@ -64,10 +64,12 @@ class PpmGenerator(QWidget):
         self.parent.musicName.setText("Opened: New signal")
 
         # Load recording into app
-        self.parent.loadWave(AudioSegment(b''.join(self.signalData),
-                                          sample_width=pyaudio.PyAudio().get_sample_size(self.format),
-                                          channels=1,
-                                          frame_rate=self.rate))
+        self.parent.loadWave(
+            AudioSegment(
+                b''.join(self.signalData),
+                sample_width=pyaudio.PyAudio().get_sample_size(self.format),
+                channels=1,
+                frame_rate=self.rate))
         # Load recording graphs
         self.parent.loadWaveGraphs()
 
@@ -78,8 +80,8 @@ class PpmGenerator(QWidget):
             self.pauseRecord()
 
         options = QFileDialog.Options()
-        fileName, _ = QFileDialog.getSaveFileName(self.parent,"Save to file", "", ".mp3 (*.mp3);;.wav (*.wav)",
-                                                  options=options)
+        fileName, _ = QFileDialog.getSaveFileName(
+            self.parent, "Save to file", "", ".mp3 (*.mp3);;.wav (*.wav)", options=options)
         if fileName:
             # Get type of file
             ext = fileName.split(".")[-1]

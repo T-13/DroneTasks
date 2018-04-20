@@ -9,12 +9,12 @@ class MusicPlot(FigureCanvas):
         self.axes = self.fig.add_subplot(111)
 
         # Hide lines
-        #self.axes.spines['bottom'].set_visible(False)
+        # self.axes.spines['bottom'].set_visible(False)
         self.axes.spines['left'].set_visible(False)
         self.axes.spines['top'].set_visible(False)
         self.axes.spines['right'].set_visible(False)
         # Hide labels
-        #self.axes.get_xaxis().set_visible(False)
+        # self.axes.get_xaxis().set_visible(False)
         self.axes.get_yaxis().set_visible(False)
 
         FigureCanvas.__init__(self, self.fig)
@@ -24,7 +24,7 @@ class MusicPlot(FigureCanvas):
         self.setMinimumWidth(1150)
         self.setMaximumWidth(1150)
 
-        self.resize(200,1150)
+        self.resize(200, 1150)
 
         self.background = None
         self.line = None
@@ -52,7 +52,7 @@ class MusicPlot(FigureCanvas):
         self.background = self.fig.canvas.copy_from_bbox(self.fig.bbox)
         if not self.line:
             self.line = self.axes.axvline(0, color='r')
-        #self.fig.canvas.mpl_connect('resizeEvent', self.resizeHandler)
+        # self.fig.canvas.mpl_connect('resizeEvent', self.resizeHandler)
 
     def resizeHandler(self, event):
         self.axes.artists.clear()
