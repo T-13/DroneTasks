@@ -18,7 +18,7 @@ class PpmGenerator(QWidget):
 
         # Init default variables
         self.recording = False
-        self.signalData = []  # DataSamples of the PPT signal (simple array  of ints with max and minimum at +/-(2^15-1)
+        self.signalData = []  # DataSamples of the PPT signal (simple array of ints with max and minimum at +/-(2^15-1)
 
         # Assign parent app
         self.parent = parent
@@ -26,7 +26,7 @@ class PpmGenerator(QWidget):
         self.initUI()
 
     # Defines the UI of the widget
-    def initUI(self):
+    def init_ui(self):
         # Init main UI layout
         self.mainUiGrid = QGridLayout()
 
@@ -47,7 +47,7 @@ class PpmGenerator(QWidget):
         self.statusText.setText("Stopped")
 
     # Pauses or resumes/starts recording input from controller
-    def pauseRecord(self):
+    def play_or_pause(self):
         if self.recording:
             self.statusText.setText("Paused")
             self.recording = False
@@ -56,7 +56,7 @@ class PpmGenerator(QWidget):
             self.recording = True
 
     # Load recording date into program to play
-    def loadSignal(self):
+    def load_signal(self):
         # If still recording pause
         if self.recording:
             self.pauseRecord()
@@ -72,20 +72,20 @@ class PpmGenerator(QWidget):
         self.parent.loadWaveGraphs()
 
     # Save recording data to a file
-    def saveSignal(self):
+    def save_signal(self):
         # If still recording pause
         if self.recording:
             self.pauseRecord()
 
         options = QFileDialog.Options()
-        fileName, _ = QFileDialog.getSaveFileName(self.parent,"Save to file", "",".mp3 (*.mp3);;.wav (*.wav)",
+        fileName, _ = QFileDialog.getSaveFileName(self.parent,"Save to file", "", ".mp3 (*.mp3);;.wav (*.wav)",
                                                   options=options)
         if fileName:
             # Get type of file
             ext = fileName.split(".")[-1]
 
             # If on linux and no extension was specified
-            if ext != "mp3" or ext != ".wav":
+            if ext != "mp3" and ext != ".wav":
                 fileName += ".mp3"
                 ext = "mp3"
 
