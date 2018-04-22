@@ -61,9 +61,8 @@ class MaPlayer:
             if self.isPlaying:
                 self.notifyStop.wait()
 
-            if platform == "win32":
-                self.stream.stop_stream()
-                self.stream.close()
+
+            self.stream.close()
             self.stream = False
 
             self.isPlaying = False
@@ -155,8 +154,7 @@ class MaPlayer:
 
         self.stream = newStream
 
-        if oldStream is not None and platform == "win32":
-            oldStream.stop_stream()
+        if oldStream is not None:
             oldStream.close()
 
     # Pause stream
