@@ -2,7 +2,6 @@ import pyaudio
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QFileDialog, QPushButton
 from pydub import AudioSegment
 from Receiver import Receiver
-from PpmSignal import PpmSignal
 
 
 class PpmGenerator(QWidget):
@@ -20,8 +19,6 @@ class PpmGenerator(QWidget):
         # Init default variables
         self.receiver = Receiver(self)
         self.signalData = []  # DataSamples of the PPM signal (simple array of ints with max and minimum at +/-(2^15-1)
-
-        self.ppmsignal = PpmSignal()
 
         # Assign parent app
         self.parent = parent
