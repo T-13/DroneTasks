@@ -14,7 +14,7 @@ class PpmGenerator(QWidget):
         self.rate = 44100
         self.chunk = 1024
         self.format = pyaudio.paInt16
-        self.channels = 2
+        self.channels = 1
 
         # Init default variables
         self.recording = False
@@ -68,7 +68,7 @@ class PpmGenerator(QWidget):
             AudioSegment(
                 b''.join(self.signalData),
                 sample_width=pyaudio.PyAudio().get_sample_size(self.format),
-                channels=1,
+                channels=self.channels,
                 frame_rate=self.rate))
         # Load recording graphs
         self.parent.loadWaveGraphs()
@@ -93,7 +93,7 @@ class PpmGenerator(QWidget):
 
             # Save to file
             AudioSegment(b''.join(self.signalData), sample_width=pyaudio.PyAudio().get_sample_size(self.format),
-                         channels=1, frame_rate=self.rate).export(fileName, ext)
+                         channels=self.channels, frame_rate=self.rate).export(fileName, ext)
 
     # TODO - Add method that can record input from controller when self.recording is True - use special class
 
