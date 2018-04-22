@@ -2,6 +2,7 @@ import pyaudio
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QFileDialog, QPushButton
 from pydub import AudioSegment
 from Receiver import Receiver
+from PpmSignal import PpmSignal
 
 
 class PpmGenerator(QWidget):
@@ -21,6 +22,8 @@ class PpmGenerator(QWidget):
         self.receiver = Receiver(self)
         self.signalData = []  # DataSamples of the PPT signal (simple array of ints with max and minimum at +/-(2^15-1)
 
+        self.ppmsignal = PpmSignal()
+
         # Assign parent app
         self.parent = parent
 
@@ -39,6 +42,10 @@ class PpmGenerator(QWidget):
         play_button = QPushButton('Play / Pause')
         play_button.clicked.connect(self.play_or_pause)
         self.mainUiGrid.addWidget(play_button, 1, 1, 1, 1)
+
+        test_button = QPushButton('Test Axis to Signal')
+        test_button.clicked.connect(lambda: self.ppmsignal.axis_to_signal(-0.5, -1, 1, 0, 0.53, -0.23, -0.112, 0.953))
+        self.mainUiGrid.addWidget(test_button, 0, 0, 1, 1)
 
         self.setLayout(self.mainUiGrid)
 
