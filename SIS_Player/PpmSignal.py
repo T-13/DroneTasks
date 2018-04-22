@@ -1,7 +1,7 @@
 
 class PpmSignal:
     def __init__(self):
-        data = []
+        self.data = []
         pass
 
     # Transforms 4 doubles representing axis input of controller to 8 doubles representing length of correct channel
@@ -15,3 +15,5 @@ class PpmSignal:
     # Appends generated signal to data with correct modulation
     def append_to_data(self, signal):
         pass
+
+

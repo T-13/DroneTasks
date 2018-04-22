@@ -1,6 +1,7 @@
 import pyaudio
-from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QFileDialog
+from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QFileDialog, QPushButton
 from pydub import AudioSegment
+from Receiver import Receiver
 
 
 class PpmGenerator(QWidget):
@@ -17,7 +18,7 @@ class PpmGenerator(QWidget):
         self.channels = 1
 
         # Init default variables
-        self.recording = False
+        self.receiver = Receiver(self)
         self.signalData = []  # DataSamples of the PPT signal (simple array of ints with max and minimum at +/-(2^15-1)
 
         # Assign parent app
@@ -35,6 +36,9 @@ class PpmGenerator(QWidget):
         self.mainUiGrid.addWidget(self.statusText, 0, 0, 1, 2)
 
         # Add buttons
+        play_button = QPushButton('Play / Pause')
+        play_button.clicked.connect(self.play_or_pause)
+        self.mainUiGrid.addWidget(play_button, 1, 1, 1, 1)
 
         self.setLayout(self.mainUiGrid)
 
@@ -48,12 +52,12 @@ class PpmGenerator(QWidget):
 
     # Pauses or resumes/starts recording input from controller
     def play_or_pause(self):
-        if self.recording:
+        if self.receiver.recording:
             self.statusText.setText("Paused")
-            self.recording = False
+            self.receiver.stop_inputs()
         else:
             self.statusText.setText("Recording")
-            self.recording = True
+            self.receiver.get_inputs()
 
     # Load recording date into program to play
     def load_signal(self):
