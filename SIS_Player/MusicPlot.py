@@ -10,12 +10,12 @@ class MusicPlot(FigureCanvas):
 
         # Hide lines
         # self.axes.spines['bottom'].set_visible(False)
-        self.axes.spines['left'].set_visible(False)
-        self.axes.spines['top'].set_visible(False)
-        self.axes.spines['right'].set_visible(False)
+        # self.axes.spines['left'].set_visible(False)
+        # self.axes.spines['top'].set_visible(False)
+        # self.axes.spines['right'].set_visible(False)
         # Hide labels
         # self.axes.get_xaxis().set_visible(False)
-        self.axes.get_yaxis().set_visible(False)
+        # self.axes.get_yaxis().set_visible(False)
 
         FigureCanvas.__init__(self, self.fig)
         self.setMinimumHeight(200)

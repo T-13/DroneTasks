@@ -13,7 +13,7 @@ class PpmGenerator(QWidget):
 
         # Init signal params
         # TODO - Change to correct params for PPM signal
-        self.rate = 44100
+        self.rate = 1000
         self.chunk = 1024
         self.format = pyaudio.paInt16
         self.channels = 1
@@ -21,6 +21,8 @@ class PpmGenerator(QWidget):
         # Init default variables
         self.receiver = Receiver(self)
         self.signalData = []  # DataSamples of the PPM signal (simple array of ints with max and minimum at +/-(2^15-1)
+
+        self.ppmsignal = PpmSignal()
 
         # Assign parent app
         self.parent = parent
@@ -65,7 +67,13 @@ class PpmGenerator(QWidget):
             self.receiver.get_inputs()
 
     def load_ppm_signal(self):
-        self.signalData = self.receiver.get_ppm_data()
+        # TEST
+        from PpmSignal import PpmSignal
+        ppm = PpmSignal()
+        ppm.axis_to_signal(1, 2, 1.5, 1, 2, 1, 1.5, 1.5)
+
+        #self.signalData = self.receiver.get_ppm_data()
+        self.signalData = ppm.get_data()
         self.load_signal()
 
     # Load recording date into program to play
