@@ -22,5 +22,5 @@ class PpmSignal:
         originalNumberOfElements = duration * frequency
         numberOfElements = len(signal)
         number = originalNumberOfElements - numberOfElements
-        signal += [1] * number
-        return signal
+        self.data += [1] * number
+        
