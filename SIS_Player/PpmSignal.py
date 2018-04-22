@@ -4,7 +4,7 @@ import numpy as np
 
 class PpmSignal:
     def __init__(self):
-        self.data = []
+        self.data = np.ones(100).tolist()
         self.rate = 50
 
     # Generates signal represented by the 8 inputs (normalized between -1 and 1)
