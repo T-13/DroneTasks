@@ -17,4 +17,9 @@ class PpmSignal:
     # Appends generated signal to data with correct modulation
     # Signal contains 8 numbers representing length of each PPM section
     def append_to_data(self, signal):
+        frequency = 50000
+        originalNumberOfElements = 1125
+        numberOfElements = len(signal)
+        number = originalNumberOfElements - numberOfElements
+        signal += [1] * number
         pass
