@@ -4,9 +4,7 @@ from time import sleep
 from PpmSignal import PpmSignal
 
 
-
 class Receiver:
-
     def __init__(self, parent):
         self.recording_signal = Event()
         self.send_delay = 0.0225
@@ -35,7 +33,7 @@ class Receiver:
             events = get_gamepad()
             for event in events:
                 if event.code == "ABS_X":
-                    self.roll = (event.state / (32767*2)) + 1.5
+                    self.roll = (event.state / (32767 * 2)) + 1.5
                 elif event.code == "ABS_Y":
                     self.pitch = (event.state / (32767 * 2)) + 1.5
                 elif event.code == "ABS_RX":
@@ -60,3 +58,6 @@ class Receiver:
         self.recording_Thread.daemon = True
         self.sending_Thread = Thread(target=self.sending_function, args=[])
         self.sending_Thread.daemon = True
+
+    def get_ppm_data(self):
+        return self.signal.get_data()

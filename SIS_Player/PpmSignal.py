@@ -1,3 +1,4 @@
+import math
 import numpy as np
 
 
@@ -12,7 +13,7 @@ class PpmSignal:
 
         # TODO Insert no data sections correctly
 
-        return signal
+        self.append_to_data(signal)
 
     # Appends generated signal to data with correct modulation
     # Signal contains 8 numbers representing length of each PPM section
@@ -23,4 +24,6 @@ class PpmSignal:
         numberOfElements = len(signal)
         number = originalNumberOfElements - numberOfElements
         self.data += [1] * number
-        
+
+    def get_data(self):
+        return np.multiply(self.data, math.pow(2, 15) - 1)

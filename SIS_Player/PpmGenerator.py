@@ -2,6 +2,7 @@ import pyaudio
 from PyQt5.QtWidgets import QWidget, QGridLayout, QLabel, QFileDialog, QPushButton
 from pydub import AudioSegment
 from Receiver import Receiver
+from PpmSignal import PpmSignal
 
 
 class PpmGenerator(QWidget):
@@ -19,7 +20,7 @@ class PpmGenerator(QWidget):
 
         # Init default variables
         self.receiver = Receiver(self)
-        self.signalData = []  # DataSamples of the PPT signal (simple array of ints with max and minimum at +/-(2^15-1)
+        self.signalData = []  # DataSamples of the PPM signal (simple array of ints with max and minimum at +/-(2^15-1)
 
         # Assign parent app
         self.parent = parent
@@ -40,6 +41,10 @@ class PpmGenerator(QWidget):
         play_button.clicked.connect(self.play_or_pause)
         self.mainUiGrid.addWidget(play_button, 1, 1, 1, 1)
 
+        graph_button = QPushButton('Draw Graph')
+        graph_button.clicked.connect(self.load_ppm_signal)
+        self.mainUiGrid.addWidget(graph_button, 2, 1, 1, 1)
+
         self.setLayout(self.mainUiGrid)
 
     # Resets state
@@ -59,11 +64,15 @@ class PpmGenerator(QWidget):
             self.statusText.setText("Recording")
             self.receiver.get_inputs()
 
+    def load_ppm_signal(self):
+        self.signalData = self.receiver.get_ppm_data()
+        self.load_signal()
+
     # Load recording date into program to play
     def load_signal(self):
         # If still recording pause
-        if self.recording:
-            self.pauseRecord()
+        if self.receiver.recording():
+            self.receiver.stop_inputs()
 
         self.parent.musicName.setText("Opened: New signal")
 
@@ -80,8 +89,8 @@ class PpmGenerator(QWidget):
     # Save recording data to a file
     def save_signal(self):
         # If still recording pause
-        if self.recording:
-            self.pauseRecord()
+        if self.receiver.recording():
+            self.receiver.stop_inputs()
 
         options = QFileDialog.Options()
         fileName, _ = QFileDialog.getSaveFileName(
