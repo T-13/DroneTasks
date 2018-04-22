@@ -44,15 +44,15 @@ class PpmGenerator(QWidget):
 
     # Resets state
     def reset(self):
-        if self.recording:
-            self.pauseRecord()
+        if self.receiver.recording():
+            self.receiver.stop_inputs()
 
         self.signalData = []
         self.statusText.setText("Stopped")
 
     # Pauses or resumes/starts recording input from controller
     def play_or_pause(self):
-        if self.receiver.recording:
+        if self.receiver.recording():
             self.statusText.setText("Paused")
             self.receiver.stop_inputs()
         else:
