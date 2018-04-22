@@ -1,6 +1,7 @@
 from threading import Thread, Event
 import threading
 import numpy as np
+from sys import platform
 
 import pyaudio
 
@@ -60,8 +61,9 @@ class MaPlayer:
             if self.isPlaying:
                 self.notifyStop.wait()
 
-            self.stream.stop_stream()
-            self.stream.close()
+            if platform == "win32":
+                self.stream.stop_stream()
+                self.stream.close()
             self.stream = False
 
             self.isPlaying = False
@@ -153,7 +155,7 @@ class MaPlayer:
 
         self.stream = newStream
 
-        if oldStream is not None:
+        if oldStream is not None and platform == "win32":
             oldStream.stop_stream()
             oldStream.close()
 
