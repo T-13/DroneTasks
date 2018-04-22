@@ -5,6 +5,7 @@ from sklearn.preprocessing import minmax_scale
 class PpmSignal:
     def __init__(self):
         self.data = []
+        self.rate = 50
 
     # Generates signal represented by the 8 inputs (normalized between -1 and 1)
     # In drone control, axes represent: roll, pitch, yaw, throttle, aux1, aux2, aux3, aux4
@@ -13,6 +14,25 @@ class PpmSignal:
         signal = minmax_scale(signal, feature_range=(1, 2))
 
         # TODO Insert no data sections correctly
+
+        time = 0
+        for a in signal:
+            time += a
+
+        time += 0.3 * 8
+
+        time_array = np.linspace(0, time, num=int(time*self.rate))
+
+        data_array = []
+
+        for a in signal:
+            data_array += np.zeros(int(a * self.rate)).tolist()
+            data_array += np.ones(int(0.3 * self.rate)).tolist()
+
+        print(data_array)
+        print(time_array)
+        print(len(time_array))
+        print(len(data_array))
         print(signal)
         return signal
 
