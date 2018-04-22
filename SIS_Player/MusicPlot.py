@@ -34,7 +34,7 @@ class MusicPlot(FigureCanvas):
     def plot(self, data_time, data_samples, step):
         # Plot data
         self.axes.margins(x=0)
-        self.axes.plot(data_time[0::step], data_samples[0::step])
+        self.axes.plot(data_time[0::step], data_samples[0::step], "-")
         self.fig.canvas.draw()
 
         self.xmin, self.xmax = self.axes.get_xlim()

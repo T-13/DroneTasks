@@ -7,10 +7,12 @@ class PpmSignal:
         self.data = np.ones(100).tolist()
         self.rate = 50
 
-    # Generates signal represented by the 8 inputs (normalized between -1 and 1)
+    # Generates signal represented by the 8 inputs (normalized between 1 and 2)
     # In drone control, axes represent: roll, pitch, yaw, throttle, aux1, aux2, aux3, aux4
-    def axis_to_signal(self, ax1=0, ax2=0, ax3=0, ax4=0, ax5=0, ax6=0, ax7=0, ax8=0):
+    def axis_to_signal(self, ax1=1.5, ax2=1.5, ax3=1.5, ax4=1.5, ax5=1.5, ax6=1.5, ax7=1.5, ax8=1.5):
         signal = np.array([ax1, ax2, ax3, ax4, ax5, ax6, ax7, ax8])
+
+        print(signal)
 
         # Insert no data sections correctly
         time = 0
