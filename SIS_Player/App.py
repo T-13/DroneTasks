@@ -58,7 +58,7 @@ class App(QWidget, QObject):
         self.tab2 = QWidget()
 
         self.tabWidget.addTab(self.tab1, "Graph")
-        self.tabWidget.addTab(self.tab2, "Project Assignment 1")
+        self.tabWidget.addTab(self.tab2, "PPM")
 
         # Set main layout
         self.setLayout(self.mainUiGrud)

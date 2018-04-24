@@ -64,14 +64,15 @@ class PpmGenerator(QWidget):
 
     def load_ppm_signal(self):
         # TEST
-        #from PpmSignal import PpmSignal
-        #ppm = PpmSignal()
-        #ppm.axis_to_signal(1, 2, 1.5, 1, 2, 1, 1.5, 1.5)
+        # from PpmSignal import PpmSignal
+        # ppm = PpmSignal()
+        # for i in range(10):
+        #     ppm.axis_to_signal(1, 2, 1.5, 1, 2, 1, 1.5, 1.5)
+        # self.signalData = ppm.get_data()
 
         self.signalData = self.receiver.get_ppm_data()
 
         print(self.signalData)
-        #self.signalData = ppm.get_data()
         self.load_signal()
 
     # Load recording date into program to play
