@@ -25,8 +25,12 @@ class App(QWidget, QObject):
         self.defaultHeight = 400
         self.height = self.defaultHeight
 
+        self.channels = 1
+        self.frame_rate = 1
+        self.frame_width = 1
+
         # Init logic variables
-        self.sound = False
+        self.sound = np.array([])
         self.time = 0
 
         self.player = MaPlayer()
@@ -144,7 +148,7 @@ class App(QWidget, QObject):
 
         self.player.closeStream()
 
-        self.sound = False
+        self.sound = np.array([])
         self.time = []
 
         # Reset slider
@@ -161,7 +165,7 @@ class App(QWidget, QObject):
     # Plays or pauses music
     def pausePlay(self):
         # If we have loaded sound
-        if self.sound:
+        if self.sound.any():
             # If inited but not busy => Sound finished playing => Replay
             if not self.player.hasStarted:
                 # Start
@@ -178,7 +182,7 @@ class App(QWidget, QObject):
     # Correctly updates the played sound data to play from where user requested
     def timeChange(self):
         # If we have loaded sound
-        if self.sound:
+        if self.sound.any():
             # Cut away all data before the given time
             self.player.skipToTime(self.slider.value())
 
@@ -213,19 +217,43 @@ class App(QWidget, QObject):
 
     # Load data
     def loadWave(self, waveData):
-        self.sound = waveData
+        self.sound = np.array(waveData.get_array_of_samples())
+        self.frame_rate = waveData.frame_rate
+        self.channels = waveData.channels
+        self.frame_width = waveData.sample_width
+        self.duration = waveData.duration_seconds
         # Init mixer with params depending on sound
-        self.player.loadData(self.sound)
+        self.player.loadData(self.sound, waveData.frame_rate,
+                             waveData.channels, waveData.sample_width)
 
-        # Get np.array of sound data
-        samplesArray = np.array(self.sound.get_array_of_samples())
         # Get array of "measurment times"
-        self.time = np.linspace(0, self.sound.duration_seconds, num=len(samplesArray))
+        self.time = np.linspace(0, self.duration, num=len(self.sound))
 
         # Update slider values to correctly sync with music time
         self.slider.setMinimum(0)
         self.slider.setMaximum(len(self.time) - 1)
         self.slider.setSingleStep(1)
+
+    # Load data
+    def loadSamples(self, samples, frame_rate, channels, width):
+        self.sound = np.array(samples)
+        self.frame_rate = frame_rate
+        self.channels = channels
+        self.frame_width = width
+        self.duration = len(samples) / self.frame_rate
+        # Init mixer with params depending on sound
+        self.player.loadData(self.sound, frame_rate,
+                             channels, width)
+
+        # Get array of "measurment times"
+        self.time = np.linspace(0, self.duration, num=len(self.sound))
+
+        # Update slider values to correctly sync with music time
+        self.slider.setMinimum(0)
+        self.slider.setMaximum(len(self.time) - 1)
+        self.slider.setSingleStep(1)
+
+
 
     # Loads the graphs for tab1 from sound data
     def loadWaveGraphs(self):
@@ -242,20 +270,20 @@ class App(QWidget, QObject):
         gc.collect()
 
         # Get np.array of sound data
-        samplesArray = np.array(self.sound.get_array_of_samples())
+        samplesArray = self.sound
 
         # Update height correctly acording to number of graphs/channels
-        self.height = 200 * self.sound.channels + 200
+        self.height = 200 * self.channels + 200
         self.resize(self.width, self.height)
 
         # Split chanels [samp1L, samp1R, samp2L, samp2R]
-        for i in range(0, self.sound.channels):
-            self.addChanel(self.time[i::self.sound.channels], samplesArray[i::self.sound.channels])
+        for i in range(0, self.channels):
+            self.addChanel(self.time[i::self.channels], samplesArray[i::self.channels])
 
     # Adds a graph of the passed chanel to UI
     def addChanel(self, data_time, data_samples):
         # Reduce data for memory and time saving We want
-        step = math.ceil(self.sound.frame_rate / 4000)
+        step = math.ceil(self.frame_rate / 4000)
         temp = math.ceil(len(data_time) / step)
         # If big file, reduce points to 55000
         if temp > 55000:
