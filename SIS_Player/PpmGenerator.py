@@ -12,8 +12,8 @@ class PpmGenerator(QWidget):
 
         # Init signal params
         # TODO - Change to correct params for PPM signal
-        self.rate = 100000
-        self.format = pyaudio.paInt16
+        self.rate = 1000
+        self.format = 2
         self.channels = 1
 
         # Init default variables
@@ -83,12 +83,9 @@ class PpmGenerator(QWidget):
         self.parent.musicName.setText("Opened: New signal")
 
         # Load recording into app
-        self.parent.loadWave(
-            AudioSegment(
-                b''.join(self.signalData),
-                sample_width=pyaudio.PyAudio().get_sample_size(self.format),
-                channels=self.channels,
-                frame_rate=self.rate))
+        self.parent.loadSamples(self.signalData, self.rate,
+                                self.channels, self.format)
+
         # Load recording graphs
         self.parent.loadWaveGraphs()
 

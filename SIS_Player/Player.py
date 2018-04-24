@@ -14,7 +14,6 @@ class MaPlayer:
         # Important properties
         self.stream = False
         self.sound = False
-        self.mainData = False
         self.isPlaying = False
         self.hasStarted = False
         self.notifyPlay = Event()
@@ -80,14 +79,13 @@ class MaPlayer:
                 self.notifyPlay.clear()
 
     # Load whole audio data
-    def loadData(self, segment):
+    def loadData(self, samples, rate, channels, width):
         self.closeStream()
-        self.mainData = segment
-        self.loadSound(self.mainData.get_array_of_samples(),
+        self.loadSound(samples,
                        changeStream=True,
-                       rate=self.mainData.frame_rate,
-                       channels=self.mainData.channels,
-                       format=self.p.get_format_from_width(self.mainData.sample_width))
+                       rate=rate,
+                       channels=channels,
+                       format=self.p.get_format_from_width(width))
 
     # Load new sound
     def loadSound(self, samples, changeStream=False, rate=44100, channels=2, format=pyaudio.paInt16):
@@ -173,7 +171,7 @@ class MaPlayer:
     def stop(self):
         self.closeStream()
         self.loadSound(
-            self.mainData.get_array_of_samples(),
+            self.sound,
             changeStream=True,
             rate=self.rate,
             channels=self.channels,
