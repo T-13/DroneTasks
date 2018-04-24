@@ -41,7 +41,7 @@ class Receiver:
                 elif event.code == "ABS_RY":
                     self.throttle = (event.state / (32767 * 2)) + 1.5
 
-    # Function that will sen controller state in correct intervals
+    # Function that will send controller state in correct intervals
     def sending_function(self):
         while self.recording_signal.is_set():
             self.signal.axis_to_signal(self.roll, self.pitch, self.yaw, self.throttle)
@@ -61,3 +61,15 @@ class Receiver:
 
     def get_ppm_data(self):
         return self.signal.get_data()
+
+    def reset(self):
+        # Stop if running
+        if self.recording():
+            self.stop_inputs()
+        # Set inputs to default values
+        self.roll = 1.5
+        self.pitch = 1.5
+        self.yaw = 1.5
+        self.throttle = 1.5
+        # Reset signal
+        self.signal = PpmSignal()

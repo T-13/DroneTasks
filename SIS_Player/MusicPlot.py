@@ -10,6 +10,7 @@ class MusicPlot(FigureCanvas):
         self.fig = Figure(tight_layout=True)
         self.axes = self.fig.add_subplot(111)
 
+
         FigureCanvas.__init__(self, self.fig)
         self.plotnav = NavigationToolbar(self.fig.canvas, self)
         self.plotnav.setStyleSheet("QToolBar { border: 0px }")
@@ -42,3 +43,9 @@ class MusicPlot(FigureCanvas):
         self.background = self.fig.canvas.copy_from_bbox(self.fig.bbox)
         if not self.line:
             self.line = self.axes.axvline(0, color='r')
+
+    def addLabel(self, text, label):
+        if label == "X" or label == "x":
+            self.axes.set_xlabel(text)
+        elif label == "Y" or label == "y":
+            self.axes.set_ylabel(text)
