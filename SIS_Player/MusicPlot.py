@@ -42,3 +42,9 @@ class MusicPlot(FigureCanvas):
         self.background = self.fig.canvas.copy_from_bbox(self.fig.bbox)
         if not self.line:
             self.line = self.axes.axvline(0, color='r')
+
+    def addLabel(self, text, label):
+        if label == "X" or label == "x":
+            self.axes.set_xlabel(text)
+        elif label == "Y" or label == "y":
+            self.axes.set_ylabel(text)
