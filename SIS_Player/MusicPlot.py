@@ -46,5 +46,7 @@ class MusicPlot(FigureCanvas):
     def addLabel(self, text, label):
         if label == "X" or label == "x":
             self.axes.set_xlabel(text)
+            self.axes.xaxis.labelpad = -10
         elif label == "Y" or label == "y":
             self.axes.set_ylabel(text)
+            self.axes.yaxis.labelpad = -10

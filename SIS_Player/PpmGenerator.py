@@ -34,31 +34,31 @@ class PpmGenerator(QWidget):
 
         # Status text to alert user if recording or not
         self.statusText = QLabel("Stopped")
-        self.mainUiGrid.addWidget(self.statusText, 0, 3, 1, 1)
+        self.mainUiGrid.addWidget(self.statusText, 11, 4, 1, 1)
 
         # Graph that will draw the signal in the way it would be transmitted over WIFI network
         self.graph = MusicPlot()
         self.update_graph()
-        self.mainUiGrid.addWidget(self.graph, 1, 0, 10, 3)
-        self.mainUiGrid.addWidget(self.graph.plotnav, 1, 3, 10, 1)
+        self.mainUiGrid.addWidget(self.graph, 1, 0, 10, 4)
+        self.mainUiGrid.addWidget(self.graph.plotnav, 1, 4, 10, 1)
 
         # Add buttons
         play_button = QPushButton('Play / Pause')
         play_button.clicked.connect(self.play_or_pause)
-        self.mainUiGrid.addWidget(play_button, 0, 0, 1, 1)
+        self.mainUiGrid.addWidget(play_button, 11, 0)
 
         # Add buttons
         reset_button = QPushButton('Reset')
         reset_button.clicked.connect(self.reset)
-        self.mainUiGrid.addWidget(reset_button, 11, 0, 1, 1)
+        self.mainUiGrid.addWidget(reset_button, 11, 1)
 
         load_button = QPushButton('Load to program')
         load_button.clicked.connect(self.load_signal)
-        self.mainUiGrid.addWidget(load_button, 11, 1, 1, 1)
+        self.mainUiGrid.addWidget(load_button, 11, 2)
 
         save_button = QPushButton('Save')
         save_button.clicked.connect(self.save_signal)
-        self.mainUiGrid.addWidget(save_button, 11, 2, 1, 1)
+        self.mainUiGrid.addWidget(save_button, 11, 3)
 
         self.setLayout(self.mainUiGrid)
 
@@ -77,18 +77,14 @@ class PpmGenerator(QWidget):
         if self.receiver.recording():
             self.statusText.setText("Paused")
             self.receiver.stop_inputs()
+            self.signalData = self.receiver.get_ppm_data()
             self.update_graph()
         else:
             self.statusText.setText("Recording")
             self.receiver.get_inputs()
 
-    def load_ppm_signal(self):
-        self.signalData = self.receiver.get_ppm_data()
-
     # Load recording date into program to play
     def load_signal(self):
-        self.load_ppm_signal()
-
         # If still recording pause
         if self.receiver.recording():
             self.receiver.stop_inputs()
@@ -128,6 +124,7 @@ class PpmGenerator(QWidget):
         # Update graph
         self.graph.axes.clear()
         time = np.linspace(0, self.receiver.signal.duration, num=len(self.receiver.signal.data))
+        self.graph.axes.set_yticks([0, 1])
         self.graph.plot(time, self.receiver.signal.data, 1)
         self.graph.addLabel("amp (int)", "y")
         self.graph.addLabel("t (ms)", "x")
