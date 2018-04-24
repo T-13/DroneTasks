@@ -12,7 +12,6 @@ import math
 
 
 class App(QWidget, QObject):
-
     playingSignal = pyqtSignal(int)
     endSignal = pyqtSignal()
 
@@ -252,8 +251,6 @@ class App(QWidget, QObject):
         self.slider.setMinimum(0)
         self.slider.setMaximum(len(self.time) - 1)
         self.slider.setSingleStep(1)
-
-
 
     # Loads the graphs for tab1 from sound data
     def loadWaveGraphs(self):

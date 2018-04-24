@@ -7,7 +7,6 @@ import numpy as np
 
 
 class PpmGenerator(QWidget):
-
     # Inits basic variables
     def __init__(self, parent):
         super().__init__()
