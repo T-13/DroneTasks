@@ -1,5 +1,7 @@
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.backends.backend_qt5 import NavigationToolbar2QT as NavigationToolbar
 from matplotlib.figure import Figure
+from PyQt5.QtCore import Qt
 
 
 class MusicPlot(FigureCanvas):
@@ -8,23 +10,11 @@ class MusicPlot(FigureCanvas):
         self.fig = Figure(tight_layout=True)
         self.axes = self.fig.add_subplot(111)
 
-        # Hide lines
-        # self.axes.spines['bottom'].set_visible(False)
-        # self.axes.spines['left'].set_visible(False)
-        # self.axes.spines['top'].set_visible(False)
-        # self.axes.spines['right'].set_visible(False)
-        # Hide labels
-        # self.axes.get_xaxis().set_visible(False)
-        # self.axes.get_yaxis().set_visible(False)
-
         FigureCanvas.__init__(self, self.fig)
-        self.setMinimumHeight(200)
-        self.setMaximumHeight(200)
-
-        self.setMinimumWidth(1150)
-        self.setMaximumWidth(1150)
-
-        self.resize(200, 1150)
+        self.plotnav = NavigationToolbar(self.fig.canvas, self)
+        self.plotnav.setStyleSheet("QToolBar { border: 0px }")
+        self.plotnav.setOrientation(Qt.Vertical)
+        self.plotnav.setMaximumWidth(35)
 
         self.background = None
         self.line = None
@@ -52,8 +42,3 @@ class MusicPlot(FigureCanvas):
         self.background = self.fig.canvas.copy_from_bbox(self.fig.bbox)
         if not self.line:
             self.line = self.axes.axvline(0, color='r')
-        # self.fig.canvas.mpl_connect('resizeEvent', self.resizeHandler)
-
-    def resizeHandler(self, event):
-        self.axes.artists.clear()
-        self.background = self.fig.canvas.copy_from_bbox(self.fig.bbox)

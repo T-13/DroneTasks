@@ -22,7 +22,7 @@ class App(QWidget, QObject):
         self.left = 110
         self.top = 130
         self.width = 1200
-        self.defaultHeight = 300
+        self.defaultHeight = 400
         self.height = self.defaultHeight
 
         # Init logic variables
@@ -245,7 +245,7 @@ class App(QWidget, QObject):
         samplesArray = np.array(self.sound.get_array_of_samples())
 
         # Update height correctly acording to number of graphs/channels
-        self.height = 200 * self.sound.channels + 150
+        self.height = 200 * self.sound.channels + 200
         self.resize(self.width, self.height)
 
         # Split chanels [samp1L, samp1R, samp2L, samp2R]
@@ -268,4 +268,5 @@ class App(QWidget, QObject):
         # Put graph onto UI
         self.graphs.append(newgraph)
         self.graphGrid.addWidget(newgraph, self.numberOfGraphs, 0, 1, 3)
+        self.graphGrid.addWidget(newgraph.plotnav, 0, 3)
         self.numberOfGraphs += 1
