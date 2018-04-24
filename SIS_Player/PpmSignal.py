@@ -45,7 +45,7 @@ class PpmSignal:
         originalNumberOfElements = self.pulse_duration * self.rate
         number = originalNumberOfElements - len(signal)
         self.data += signal + np.ones(int(number)).tolist()
-        self.duration += 22.5
+        self.duration += self.pulse_duration
 
     def get_data(self):
         return np.multiply(self.data, math.pow(2, 15) - 1)
