@@ -31,8 +31,14 @@ posteriErrorEstimate = 1.0;
 
 %% P.I.D. variables - TODO
 % proportional parameter
+Kp = 1;
+PTerm = 0;
 % integral parameter
+Ki = 1;
+ITerm = 0;
 % derivative parameter
+Kd = 1
+DTerm = 0;
 
 % target value for PID controller
 
@@ -87,7 +93,12 @@ for ts = 1:1:(timeDuration/timeStep)
 
 
     %% P.I.D. - TODO
-
+	er = currentHeight - previousHeight
+    PTerm = Kp * er;
+    ITerm += er * ts;
+    DTerm = er / ts;
+    
+    o = PTerm + (Ki * ITerm) + (Kd * DTerm)
 
     %% control logic here - TODO
     historyThrust(ts) = currentThrust;
