@@ -24,26 +24,27 @@ startThrust = 0;  % percentage of maxThrust (initial force)
 %% Kalman variables
 processVariance = 1e-5;
 estimatedMeasurementVariance = 0.1 ** 2;
+
 % initialize
 posteriEstimate = 0.0;
 posteriErrorEstimate = 1.0;
 
 
-%% P.I.D. variables - TODO
-% proportional parameter
-Kp = 1.2;
-PTerm = 0;
-% integral parameter
-Ki = 1;
-ITerm = 0;
-% derivative parameter
-Kd = 0.8;
-DTerm = 0;
-
-% target value for PID controller
-desiredHeight = 0;
+%% P.I.D. variables
+Kp = 1.2; % proportional parameter
+Ki = 1; % integral parameter
+Kd = 0.8; % derivative parameter
+desiredHeight = 0; % target value
 
 % initialize
+ITerm = 0;
+
+
+%% Personalized parameters
+%source('params_jonpas.m');
+%source('params_nevith.m');
+%source('params_planeer.m');
+%source('params_askupek.m');
 
 
 %% simulation
@@ -93,19 +94,18 @@ for ts = 1:1:(timeDuration/timeStep)
     historyHeightWithFilter(ts) = currentHeight;
 
 
-    %% P.I.D. - TODO
+    %% P.I.D.
 	  er = desiredHeight - currentHeight;
     PTerm = Kp * er;
     ITerm += er * timeStep;
-    DTerm = Kp*(previousHeight - currentHeight) / timeStep;
+    DTerm = Kp * (previousHeight - currentHeight) / timeStep;
     
     o = PTerm + (Ki * ITerm) + (Kd * DTerm);
-    # disp(o);
 
-    %% control logic here - TODO
+
+    %% control logic here
+    currentThrust = -o / 100;
     historyThrust(ts) = currentThrust;
-    currentThrust = -o/100;
-
 
 
     %% calculate new state ...
@@ -162,4 +162,3 @@ subplot(2,2,4);
 title('Kinectic energy of object');
 plot(historyTime, historyEnergy);
 xlabel('time (s)'); ylabel('energy (J)');
-
