@@ -22,10 +22,11 @@ startThrust = 0;  % percentage of maxThrust (initial force)
 
 
 %% Kalman variables - TODO
-% process variance
-% estimate of measurement variance
-
-% intialize - initial guess
+processVariance = 1e-5;
+estimatedMeasurementVariance = 0.1 ** 2;
+# intial guesses
+posteriEstimate = 0.0;
+posteriErrorEstimate = 1.0;
 
 
 %% P.I.D. variables - TODO
@@ -74,9 +75,17 @@ for ts = 1:1:(timeDuration/timeStep)
 
 
 
-    %% Kalman filter - TODO
+    %% Kalman filter
+    # time update
+    prioriEstimate = posteriEstimate;
+    posteriErrorEstimate = posteriErrorEstimate + processVariance;
 
-    historyHeightWithFilter(ts) = currentHeight;
+    # measurement update
+    blendingFactor = posteriErrorEstimate / (posteriErrorEstimate + estimatedMeasurementVariance);
+    posteriEstimate = prioriEstimate + blendingFactor * (currentHeight - prioriEstimate);
+    posteriErrorEstimate = (1 - blendingFactor) * posteriErrorEstimate;
+    historyHeightWithFilter(ts) = posteriEstimate;
+
 
     %% P.I.D. - TODO
 
