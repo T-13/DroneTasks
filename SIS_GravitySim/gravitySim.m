@@ -2,22 +2,22 @@
 % simplified world, ignoring air resistance
 
 %% simulation variables
-timeDuration = 10;  % seconds
-timeStep = 0.001;   % seconds
+timeDuration = 10; % seconds
+timeStep = 0.001; % seconds
 
-g = -9.81;          % meters / seconds * seconds (gravitational change of velocity)
+g = -9.81; % meters / seconds * seconds (gravitational change of velocity)
 
-snr_dB = 30.0;       % power of signal over noise
+snr_dB = 30.0; % power of signal over noise
 
 
 %% object variables
 % properties
-objectMass = 0.4;           % kg
-objectMaxThrust = 13.08;    % N (force of engines)
+objectMass = 0.4; % kg
+objectMaxThrust = 13.08; % N (force of engines)
 objectNeutralThrust = (g / objectMaxThrust) * -1;
 % state
-startHeight = 5;            % meters (initial height)
-startVelocity = 0;          % meters / seconds (initial velocity)
+startHeight = 5; % meters (initial height)
+startVelocity = 0; % meters / seconds (initial velocity)
 startThrust = 0;  % percentage of maxThrust (initial force)
 
 
@@ -40,7 +40,7 @@ desiredHeight = 0; % target value
 ITerm = 0;
 
 
-%% Personalized parameters
+%% personalized parameters
 %source('params_jonpas.m');
 %source('params_nevith.m');
 %source('params_planeer.m');
@@ -77,7 +77,7 @@ for ts = 1:1:(timeDuration/timeStep)
     previousEnergy = currentEnergy;
     previousThrust = currentThrust;
 
-    % simulate noise :P
+    % simulate noise
     currentNoise = awgn_noise_single_element(historyHeight(1:ts), snr_dB);
 	  currentHeight = currentHeight + currentNoise;
 
@@ -103,9 +103,10 @@ for ts = 1:1:(timeDuration/timeStep)
     o = PTerm + (Ki * ITerm) + (Kd * DTerm);
 
 
-    %% control logic here
+    %% control logic
     currentThrust = -o / 100;
     historyThrust(ts) = currentThrust;
+
 
 
     %% calculate new state ...
