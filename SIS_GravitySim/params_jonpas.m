@@ -11,11 +11,11 @@ objectMaxThrust = 17.8364; % N (force of engines)
 startHeight = 4.4; % meters (initial height)
 
 %% Kalman variables
-processVariance = 1e-5;
+processVariance = 1e-6;
 estimatedMeasurementVariance = 0.1 ** 2;
 
 %% P.I.D. variables
-Kp = 1.2; % proportional parameter
-Ki = 1; % integral parameter
-Kd = 0.8; % derivative parameter
+Kp = 24; % proportional parameter
+Ki = -8; % integral parameter
+Kd = 45; % derivative parameter
 desiredHeight = 0; % target value
