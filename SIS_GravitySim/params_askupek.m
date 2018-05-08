@@ -1,21 +1,21 @@
 %% personalized parameters
 
 %% simulation variables
-snr_dB = 30.0; % power of signal over noise
+snr_dB = 33.0; % power of signal over noise
 
 %% object variables
 % properties
-objectMass = 0.4; % kg
-objectMaxThrust = 13.08; % N (force of engines)
+objectMass = 0.54; % kg
+objectMaxThrust = 16.3500; % N (force of engines)
 % state
-startHeight = 5; % meters (initial height)
+startHeight = 6.2; % meters (initial height)
 
 %% Kalman variables
-processVariance = 1e-5;
+processVariance = 1e-6;
 estimatedMeasurementVariance = 0.1 ** 2;
 
 %% P.I.D. variables
-Kp = 1.2; % proportional parameter
-Ki = 1; % integral parameter
-Kd = 0.8; % derivative parameter
+Kp = 10; % proportional parameter
+Ki = -4.435; % integral parameter
+Kd = 40; % derivative parameter
 desiredHeight = 0; % target value
