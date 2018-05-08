@@ -57,8 +57,8 @@ ITerm = 0;
 %% personalized parameters
 %source('params_jonpas.m');
 %source('params_nevith.m');
-%source('params_planeer.m');
 source('params_planeer.m');
+%source('params_askupek.m');
 
 
 %% simulation
