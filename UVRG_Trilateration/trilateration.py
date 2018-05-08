@@ -23,8 +23,11 @@ def main():
         print("Invalid input! Distance may not be negative!")
         return 1
 
-    print(p1, p2, p3)
-    print(r1, r2, r3)
+    # TODO Convert to planar coordinate system (all points on z = 0)
+
+    # TODO Calculate target's position
+
+    # TODO Convert back to original coordinate system
 
 
 if __name__ == "__main__":
