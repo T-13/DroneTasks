@@ -22,12 +22,13 @@ startThrust = 0;  % percentage of maxThrust (initial force)
 
 
 %% Kalman variables
-processVariance = 1e-5;
+processVariance = 1e-3;
 estimatedMeasurementVariance = 0.1 ** 2;
 
 % initialize
 posteriEstimate = 0.0;
 posteriErrorEstimate = 1.0;
+prevHeightEstimate = 0.0;
 
 
 %% P.I.D. variables
@@ -36,13 +37,27 @@ Ki = 1; % integral parameter
 Kd = 0.8; % derivative parameter
 desiredHeight = 0; % target value
 
+################################################################################
+% KP will subtract current Error from the output of PID
+#   Effectively changing thrustthe further away from desiredHeight
+# KI will subtract(when +) or add(when -) accumulated Error from/to the output of PID
+#   Effectively lowering or upping thrust when time passes
+# KD will add to the output od PID in relation to current speed
+#   Effectively upping thrust if falling fast or lowering it if flying away to fast
+################################################################################
+# KP looses effect the closer we are to DesiredHeight
+# KD looses effect the slower we go
+# KI rises the longer we fly (If running for a long time needs reset)
+################################################################################
+
+
 % initialize
 ITerm = 0;
 
 
 %% personalized parameters
 %source('params_jonpas.m');
-%source('params_nevith.m');
+source('params_nevith.m');
 %source('params_planeer.m');
 %source('params_askupek.m');
 
@@ -93,18 +108,28 @@ for ts = 1:1:(timeDuration/timeStep)
 
     historyHeightWithFilter(ts) = currentHeight;
 
-
     %% P.I.D.
 	  er = desiredHeight - currentHeight;
     PTerm = Kp * er;
     ITerm += er * timeStep;
-    DTerm = Kp * (previousHeight - currentHeight) / timeStep;
+    DTerm = (prevHeightEstimate - currentHeight) / timeStep;
+    prevHeightEstimate = currentHeight;
     
-    o = PTerm + (Ki * ITerm) + (Kd * DTerm);
-
+    # Deal with floating point precision problems with round
+    o = round(PTerm + (Ki * ITerm) + (Kd * DTerm));
+    
+    # Limit output between 0 and 100
+    if o > 100
+      o = 100;
+    elseif o < 0
+      o = 0;
+    endif
+ 
+    
 
     %% control logic
-    currentThrust = -o / 100;
+    currentThrust = (o / 100);  # Transform output of PID to percentage
+    
     historyThrust(ts) = currentThrust;
 
 
@@ -128,7 +153,7 @@ for ts = 1:1:(timeDuration/timeStep)
 
     %% exit conditions
     if currentHeight <= 0
-        disp('Simulation results:')
+        disp('Simulation results:');
         disp(['Landing time: ' num2str(historyTime(ts)) ' s']);
         disp(['Landing speed: ' num2str(historyVelocity(ts)) ' m/s']);
         disp(['Landing force: ' num2str(historyEnergy(ts)) ' N']);
