@@ -33,7 +33,7 @@ def main():
     v2 = p3 - p1  # vector from p1 to p3 (p3 is shifted to our coordinate system)
     # p1 is center of our coordinate system (0, 0, 0)
 
-    # Create orthogonal axes of our coordinate system
+    # Create orthogonal axes of our coordinate system (simplified Gram-Schmidt process)
     v1xv2 = np.cross(v1, v2)
     xn = v1 / np.linalg.norm(v1)
     zn = v1xv2 / np.linalg.norm(v1xv2)
