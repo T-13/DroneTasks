@@ -29,8 +29,8 @@ def main():
         return 1
 
     # Convert to planar coordinate system (all points on z = 0)
-    v1 = p2 - p1  # vector from p1 to p2 (p2 is shifted to our coordinate system)
-    v2 = p3 - p1  # vector from p1 to p3 (p3 is shifted to our coordinate system)
+    v1 = p2 - p1  # Vector from p1 to p2 (p2 is shifted to our coordinate system)
+    v2 = p3 - p1  # Vector from p1 to p3 (p3 is shifted to our coordinate system)
     # p1 is center of our coordinate system (0, 0, 0)
 
     # Create orthogonal axes of our coordinate system (simplified Gram-Schmidt process)
@@ -41,7 +41,7 @@ def main():
 
     d = np.dot(xn, v1)  # p1 = [0, 0, 0]
     i = np.dot(xn, v2)  # p2 = [d, 0, 0]
-    j = np.dot(yn, v2)  # p2 = [i, j, 0]
+    j = np.dot(yn, v2)  # p3 = [i, j, 0]
 
     # Calculate target's position
     x = (r1**2 - r2**2 + d**2) / (2 * d)
