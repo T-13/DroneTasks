@@ -55,9 +55,9 @@ ITerm = 0;
 
 
 %% personalized parameters
-%source('params_jonpas.m');
+source('params_jonpas.m');
 %source('params_nevith.m');
-source('params_planeer.m');
+%source('params_planeer.m');
 %source('params_askupek.m');
 
 
@@ -114,10 +114,10 @@ for ts = 1:1:(timeDuration/timeStep)
     ITerm += er * timeStep;
     DTerm = (prevHeightEstimate - currentHeight) / timeStep;
     prevHeightEstimate = currentHeight;
-    
+
     % Deal with floating point precision problems with round
     o = round(PTerm + (Ki * ITerm) + (Kd * DTerm));
-    
+
     % Limit output between 0 and 100
     if o > 100
         o = 100;
@@ -164,8 +164,8 @@ end
 figure;
 subplot(2,2,1); hold on;
 title('Height of object');
-plot(historyTime, historyHeightWithNoise, 'r');
-plot(historyTime, historyHeightWithFilter, 'g');
+plot(historyTime, historyHeightWithNoise, 'm');
+plot(historyTime, historyHeightWithFilter, 'c');
 plot(historyTime, historyHeight, 'b');
 hold off;
 xlabel('time (s)'); ylabel('height (m)');
