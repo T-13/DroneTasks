@@ -55,7 +55,7 @@ GameObject:
   - component: {fileID: 4330078964419080}
   - component: {fileID: 120047344780379032}
   m_Layer: 0
-  m_Name: TrajectoryActual
+  m_Name: TrajectoryFlight
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
