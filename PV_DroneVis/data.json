@@ -1,0 +1,46 @@
+{
+    "beacons": [
+        {
+            "name": "Beacon 1",
+            "position": {
+                "x": 5,
+                "y": 2,
+                "z": 0
+            }
+        }
+    ],
+    "drones": [
+        {
+            "name": "Drone 1",
+            "position": {
+                "x": 0,
+                "y": 0,
+                "z": 0
+            },
+            "trajectoryPlanned": [
+                {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                {
+                    "x": 5,
+                    "y": 3,
+                    "z": 2
+                }
+            ],
+            "trajectoryFlight": [
+                {
+                    "x": 0,
+                    "y": 0,
+                    "z": 0
+                },
+                {
+                    "x": 5,
+                    "y": 4,
+                    "z": 2
+                }
+            ]
+        }
+    ]
+}
