@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Beacon : MonoBehaviour {
 
-    public BeaconData data;
+    public BeaconData data; // Initial data from JSON
 
     // Use this for initialization
     void Start() {

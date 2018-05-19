@@ -36,8 +36,11 @@ public class DataReader : MonoBehaviour {
             objectDrone.GetComponent<Drone>().data = drone;
 
             objectDrone.transform.Find("FloatingName").GetComponent<TextMesh>().text = drone.name;
-        }
 
-        // TODO Draw Trajectory Planned
+            // Draw Planned Trajectory for drone
+            LineRenderer trajectoryPlanned = objectDrone.transform.Find("TrajectoryPlanned").GetComponent<LineRenderer>();
+            trajectoryPlanned.positionCount = drone.trajectoryPlanned.Length;
+            trajectoryPlanned.SetPositions(drone.trajectoryPlanned);
+        }
     }
 }
