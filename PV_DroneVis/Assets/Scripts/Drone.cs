@@ -9,8 +9,8 @@ public class Drone : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        trajectoryFlight = transform.Find("TrajectoryActual").GetComponent<LineRenderer>();
-        trajectoryFlight.positionCount = data.trajectoryFlight.Length;
+        // Find Flight Trajectory renderer
+        trajectoryFlight = transform.Find("TrajectoryFlight").GetComponent<LineRenderer>();
     }
 
     // Update is called once per frame
@@ -22,7 +22,8 @@ public class Drone : MonoBehaviour {
         // TODO Only run every X time (eg. once per second)
         // TODO Move drone every step through Flight Trajectory
 
-        // Draw Flight Trajectory
+        // Draw Flight Trajectory (increase vertex count and set position of current step)
+        trajectoryFlight.positionCount++;
         trajectoryFlight.SetPosition(step, data.trajectoryFlight[step]);
         step++;
     }
