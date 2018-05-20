@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class FloatingName : MonoBehaviour {
-
     public float textSize = 30;
 
     Camera mainCamera;

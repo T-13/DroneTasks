@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4298299190393638}
   - component: {fileID: 120062471443951294}
   m_Layer: 0
-  m_Name: TrajectoryPlanned
+  m_Name: TrajectoryFlightPlan
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -391,8 +391,8 @@ MonoBehaviour:
   data:
     name: 
     position: {x: 0, y: 0, z: 0}
-    trajectoryPlanned: []
-    trajectoryFlight: []
+    flightData: []
+    flightPlan: []
   speed: 1
 --- !u!120 &120062471443951294
 LineRenderer:

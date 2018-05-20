@@ -1,7 +1,6 @@
 using UnityEngine;
 
 public class CameraController : MonoBehaviour {
-
     static float movementSpeed = 1.0f;
 
     // Update is called once per frame

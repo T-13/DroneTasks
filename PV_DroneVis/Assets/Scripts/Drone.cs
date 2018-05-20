@@ -1,9 +1,8 @@
 using UnityEngine;
 
 public class Drone : MonoBehaviour {
-
     public DroneData data; // Initial data from JSON
-    public float speed = 1.0f; // Trajectory segment time length (default one per second)
+    public float speed = 1.0f; // Flight data segment time length (default one per second)
 
     int step = 0;
     float startTime = 0.0f;
@@ -12,14 +11,14 @@ public class Drone : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        // Move to next trajectory segment every speed unit
+        // Move to next flight data segment every speed unit
         InvokeRepeating("UpdatePosition", 0.0f, speed);
     }
 
     // Update is called once per frame
     void Update() {
-        // Disable UpdatePosition if we are on last trajectory segment
-        if (step >= data.trajectoryFlight.Length - 1) {
+        // Disable UpdatePosition if we are on last flight data segment
+        if (step >= data.flightData.Length - 1) {
             CancelInvoke("UpdatePosition");
 
             // Disable Update if we are at the end of movement
@@ -32,13 +31,13 @@ public class Drone : MonoBehaviour {
         transform.position = Vector3.Lerp(segmentStart, segmentEnd, Time.time - startTime); ;
     }
 
-    // Sets up data for next trajectory segment
+    // Sets up data for next flight data segment
     void UpdatePosition() {
         step++;
         startTime = Time.time;
 
         // Setup next segment (from last to next step)
-        segmentStart = data.trajectoryFlight[step - 1];
-        segmentEnd = data.trajectoryFlight[step];
+        segmentStart = data.flightData[step - 1];
+        segmentEnd = data.flightData[step];
     }
 }

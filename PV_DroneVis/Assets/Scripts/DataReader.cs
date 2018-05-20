@@ -3,7 +3,6 @@ using System.IO;
 using UnityEngine;
 
 public class DataReader : MonoBehaviour {
-
     [Serializable]
     public class Data {
         public BeaconData[] beacons;
@@ -37,10 +36,10 @@ public class DataReader : MonoBehaviour {
 
             objectDrone.transform.Find("FloatingName").GetComponent<TextMesh>().text = drone.name;
 
-            // Draw Planned Trajectory for drone
-            LineRenderer trajectoryPlanned = objectDrone.transform.Find("TrajectoryPlanned").GetComponent<LineRenderer>();
-            trajectoryPlanned.positionCount = drone.trajectoryPlanned.Length;
-            trajectoryPlanned.SetPositions(drone.trajectoryPlanned);
+            // Draw Flight Plan for drone
+            LineRenderer trajectoryFlightPlan = objectDrone.transform.Find("TrajectoryFlightPlan").GetComponent<LineRenderer>();
+            trajectoryFlightPlan.positionCount = drone.flightPlan.Length;
+            trajectoryFlightPlan.SetPositions(drone.flightPlan);
         }
     }
 }
