@@ -145,6 +145,7 @@ MonoBehaviour:
     type: 2}
   droneObject: {fileID: 1702975676055416, guid: 392e1585fdf35494882f9a41b61909ec,
     type: 2}
+  trajectoryMaterial: {fileID: 10306, guid: 0000000000000000f000000000000000, type: 0}
 --- !u!4 &1234479550
 Transform:
   m_ObjectHideFlags: 0

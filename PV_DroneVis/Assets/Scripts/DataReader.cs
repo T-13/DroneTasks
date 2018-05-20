@@ -12,6 +12,7 @@ public class DataReader : MonoBehaviour {
     public string dataPath = "data.json";
     public GameObject beaconObject;
     public GameObject droneObject;
+    public Material trajectoryMaterial;
 
     // Use this for initialization
     void Awake() {
@@ -26,20 +27,35 @@ public class DataReader : MonoBehaviour {
         foreach (BeaconData beacon in data.beacons) {
             GameObject objectBeacon = Instantiate(beaconObject, beacon.position, Quaternion.identity);
             objectBeacon.GetComponent<Beacon>().data = beacon;
-
-            objectBeacon.transform.Find("FloatingName").GetComponent<TextMesh>().text = beacon.name;
+            objectBeacon.name = beacon.name;
         }
 
         foreach (DroneData drone in data.drones) {
             GameObject objectDrone = Instantiate(droneObject, drone.position, Quaternion.identity);
             objectDrone.GetComponent<Drone>().data = drone;
+            objectDrone.name = drone.name;
 
-            objectDrone.transform.Find("FloatingName").GetComponent<TextMesh>().text = drone.name;
+            // Draw Trajectories
+            foreach (Trajectory trajectory in drone.trajectories) {
+                // Create subobject
+                GameObject objectTrajectory = new GameObject();
+                objectTrajectory.transform.SetParent(objectDrone.transform);
 
-            // Draw Flight Plan for drone
-            LineRenderer trajectoryFlightPlan = objectDrone.transform.Find("TrajectoryFlightPlan").GetComponent<LineRenderer>();
-            trajectoryFlightPlan.positionCount = drone.flightPlan.Length;
-            trajectoryFlightPlan.SetPositions(drone.flightPlan);
+                // Add Line component
+                LineRenderer lineTrajectory = objectTrajectory.AddComponent<LineRenderer>();
+                lineTrajectory.material = trajectoryMaterial;
+                lineTrajectory.widthMultiplier = 0.05f;
+
+                // Generate random color of line, set start and end to it
+                Color randColor = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+                lineTrajectory.startColor = randColor;
+                lineTrajectory.endColor = randColor;
+
+                // Set name and positions
+                lineTrajectory.name = trajectory.name;
+                lineTrajectory.positionCount = trajectory.data.Length;
+                lineTrajectory.SetPositions(trajectory.data);
+            }
         }
     }
 }

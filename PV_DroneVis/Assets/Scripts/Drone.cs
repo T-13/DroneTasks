@@ -11,8 +11,12 @@ public class Drone : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
-        // Move to next flight data segment every speed unit
-        InvokeRepeating("UpdatePosition", 0.0f, speed);
+        // Move to next flight data segment every speed unit, disable if not enough points
+        if (data.flightData.Length > 1) {
+            InvokeRepeating("UpdatePosition", 0.0f, speed);
+        } else {
+            enabled = false;
+        }
     }
 
     // Update is called once per frame

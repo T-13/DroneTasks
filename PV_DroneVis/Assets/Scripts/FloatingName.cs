@@ -7,6 +7,9 @@ public class FloatingName : MonoBehaviour {
 
     // Use this for initialization
     void Start() {
+        // Set name
+        GetComponent<TextMesh>().text = transform.parent.name;
+
         // Cache main camera (expensive accessor)
         mainCamera = Camera.main;
     }
