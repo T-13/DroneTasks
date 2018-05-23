@@ -10,45 +10,23 @@ import random
 def main():
     # Parse arguments
     parser = argparse.ArgumentParser(description="Trilateration")
-    parser.add_argument(
-        "-p1", type=float, nargs=3, metavar=("x", "y", "z"), help="first base station position", required=True)
-    parser.add_argument(
-        "-p2", type=float, nargs=3, metavar=("x", "y", "z"), help="second base station position", required=True)
-    parser.add_argument(
-        "-p3", type=float, nargs=3, metavar=("x", "y", "z"), help="third base station position", required=True)
-    parser.add_argument(
-        "-p4", type=float, nargs=3, metavar=("x", "y", "z"), help="fourth base station position", required=False)
-    parser.add_argument(
-        "-p5", type=float, nargs=3, metavar=("x", "y", "z"), help="fifth base station position", required=False)
-    parser.add_argument(
-        "-p6", type=float, nargs=3, metavar=("x", "y", "z"), help="sixth base station position", required=False)
-    parser.add_argument(
-        "-p7", type=float, nargs=3, metavar=("x", "y", "z"), help="seventh base station position", required=False)
-    parser.add_argument(
-        "-p8", type=float, nargs=3, metavar=("x", "y", "z"), help="eighth base station position", required=False)
-    parser.add_argument(
-        "-p9", type=float, nargs=3, metavar=("x", "y", "z"), help="ninth base station position", required=False)
-    parser.add_argument(
-        "-p10", type=float, nargs=3, metavar=("x", "y", "z"), help="tenth base station position", required=False)
-    parser.add_argument("-r1", type=float, metavar=("r"), help="distance to first base station", required=True)
-    parser.add_argument("-r2", type=float, metavar=("r"), help="distance to second base station", required=True)
-    parser.add_argument("-r3", type=float, metavar=("r"), help="distance to third base station", required=True)
-    parser.add_argument("-r4", type=float, metavar=("r"), help="distance to fourth base station", required=False)
-    parser.add_argument("-r5", type=float, metavar=("r"), help="distance to fifth base station", required=False)
-    parser.add_argument("-r6", type=float, metavar=("r"), help="distance to sixth base station", required=False)
-    parser.add_argument("-r7", type=float, metavar=("r"), help="distance to seventh base station", required=False)
-    parser.add_argument("-r8", type=float, metavar=("r"), help="distance to eighth base station", required=False)
-    parser.add_argument("-r9", type=float, metavar=("r"), help="distance to ninth base station", required=False)
-    parser.add_argument("-r10", type=float, metavar=("r"), help="distance to tenth base station", required=False)
+    for i in range(1, 11):
+        parser.add_argument(
+            "-p{}".format(i), type=float, nargs=3, metavar=("x", "y", "z"),
+            help="{}. base station position".format(i), required=i < 4)
+        parser.add_argument(
+            "-r{}".format(i), type=float, metavar=("r"),
+            help="distance to {}. base station".format(i), required=i < 4)
     args = parser.parse_args()
 
     # Positions
-    p = [np.array(args.p1), np.array(args.p2), np.array(args.p3), np.array(args.p4), np.array(args.p5), np.array(args.p6), np.array(args.p7), np.array(args.p8), np.array(args.p9), np.array(args.p10) ]
-    
+    p = [np.array(args.p1), np.array(args.p2), np.array(args.p3), np.array(args.p4), np.array(args.p5),
+         np.array(args.p6), np.array(args.p7), np.array(args.p8), np.array(args.p9), np.array(args.p10)]
+
     # Distances
     r = [args.r1, args.r2, args.r3, args.r4, args.r5, args.r6, args.r7, args.r8, args.r9, args.r10]
 
-    # Remove all none set args
+    # Remove all unset args
     p = [x for x in p if x.any()]
     r = [x for x in r if x != None]
 
@@ -67,7 +45,7 @@ def main():
         # Pick stations
         for i in range(len(p)):
             stations = p.copy()
-            
+
             # Randomize
             random.shuffle(stations)
             four_stations = stations[0:4]
@@ -107,9 +85,9 @@ def main():
         err /= len(p)
         err = math.sqrt(err)
 
-        print(P)
-        print("RMSE: " + str(err))
-        
+        print([round(i, 2) for i in P])
+        print("RMSE: {}".format(round(err, 2)))
+
 
 def get_index(points, point):
     i = 0
@@ -127,7 +105,11 @@ def already_used_stations(current, previous):
     for p in previous:
         match = 0
         for point in p:
-            if (point==current[0]).all() or (point==current[1]).all() or (point==current[2]).all() or (point==current[3]).all():
+            all_0 = (point == current[0]).all()
+            all_1 = (point == current[1]).all()
+            all_2 = (point == current[2]).all()
+            all_3 = (point == current[3]).all()
+            if all_0 or all_1 or all_2 or all_3:
                 match += 1
         if match == 4:
             return True
@@ -180,7 +162,6 @@ def four_point_trilateration(p, r):
     zn = v1xv2 / np.linalg.norm(v1xv2)
     yn = np.cross(xn, zn)
 
-    # za 4 enačbe se izračuna a, b, c, p4
     # Calculate a,b and c from p4 and others locations
     a = np.dot((p4 - p1), xn)
     b = np.dot((p4 - p1), yn)
@@ -195,22 +176,15 @@ def four_point_trilateration(p, r):
     x = (r1**2 - r2**2 + d**2) / (2 * d)
     y = (r1**2 - r3**2 + i**2 + j**2) / (2 * j) - (i / j) * x
 
-    # če imaš 3 točke imaš ta z
-    # z = math.sqrt(abs(r1**2 - x**2 - y**2)) * zn
-
-    # če imaš 4 ali več točk pa narediš tako
     if c == 0:
         z = np.zeros(3)
     else:
-        z = (r1**2 - r4**2 + a**2 + b**2 + c**2) / (2*c) - (a/c)*x - (b/c)*y
-    
-    # če imaš 3 enačbe odkomentiraj k2 če pa 4 pa pusti tako kot je
-    # Convert back to original coordinate system
-    k = p1 + x * xn + y * yn
-    k1 = k - z
-    # k2 = k - z
+        z = (r1**2 - r4**2 + a**2 + b**2 + c**2) / (2 * c) - (a / c) * x - (b / c) * y
 
-    return k1
+    # Convert back to original coordinate system
+    k = p1 + x * xn + y * yn - z
+
+    return k
 
 if __name__ == "__main__":
     sys.exit(main())
