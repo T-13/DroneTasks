@@ -63,11 +63,10 @@ def main():
 
         # Calculate all positions
         for stations in previous_positions:
-
             # Get distances for current stations
             r_of_stations = []
             for s in stations:
-                r_of_stations.append(r[get_index(p,s)])
+                r_of_stations.append(r[get_index(p, s)])
 
             # Calculate for current 4 stations
             res = four_point_trilateration(stations, r_of_stations)
@@ -75,7 +74,7 @@ def main():
             P += res
 
         # Average
-        P = P/len(p)
+        P /= len(p)
 
         # Calculate error
         err = 0
@@ -90,11 +89,9 @@ def main():
 
 
 def get_index(points, point):
-    i = 0
-    for p in points:
-        if p[0] == point[0] and p[1] == point[1] and p[2] == point[2]:
+    for i, p in enumerate(points):
+        if np.array_equal(p, point):
             return i
-        i += 1
 
 def already_used_stations(current, previous):
     # If no previous stations
