@@ -156,6 +156,12 @@ def four_point_trilateration(p, r):
     # Create orthogonal axes of our coordinate system (simplified Gram-Schmidt process)
     v1xv2 = np.cross(v1, v2)
     xn = v1 / np.linalg.norm(v1)
+
+    if np.linalg.norm(v1xv2) == 0:
+        print("V1 and V2 are collinear")
+        quit()
+
+
     zn = v1xv2 / np.linalg.norm(v1xv2)
     yn = np.cross(xn, zn)
 
@@ -173,15 +179,19 @@ def four_point_trilateration(p, r):
     x = (r1**2 - r2**2 + d**2) / (2 * d)
     y = (r1**2 - r3**2 + i**2 + j**2) / (2 * j) - (i / j) * x
 
-    if c == 0:
+    if almost_equal(c, 0):
         z = np.zeros(3)
     else:
         z = (r1**2 - r4**2 + a**2 + b**2 + c**2) / (2 * c) - (a / c) * x - (b / c) * y
 
     # Convert back to original coordinate system
-    k = p1 + x * xn + y * yn - z
+    k = p1 + x * xn + y * yn + z * zn
 
     return k
+
+# Compares 2 numbers if equal, designed for floats to overcome precision errors
+def almost_equal(a, b):
+    return np.abs(a - b) < 0.000001
 
 if __name__ == "__main__":
     sys.exit(main())
