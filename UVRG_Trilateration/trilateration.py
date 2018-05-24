@@ -53,7 +53,7 @@ def main():
             if not already_used_stations(four_stations, rand_stations):
                 rand_stations.append(four_stations)
 
-        P = [0, 0, 0]  # End result
+        P = np.array([0.0, 0.0, 0.0])  # End result
         positions = []
 
         # Calculate all positions
@@ -90,10 +90,6 @@ def get_index(points, point):
 
 
 def already_used_stations(current, previous):
-    # If no previous stations
-    if len(previous) == 0:
-        return False
-
     # Check if current 4 stations had already been used
     for p in previous:
         match = 0
