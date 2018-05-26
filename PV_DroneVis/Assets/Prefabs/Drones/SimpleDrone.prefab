@@ -1195,12 +1195,12 @@ TextMesh:
   m_GameObject: {fileID: 1652379433328942}
   m_Text: Drone Name
   m_OffsetZ: 0
-  m_CharacterSize: 0.1
+  m_CharacterSize: 0.25
   m_LineSpacing: 1
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 30
+  m_FontSize: 15
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 0}
