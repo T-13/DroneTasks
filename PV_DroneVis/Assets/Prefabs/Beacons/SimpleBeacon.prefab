@@ -207,7 +207,7 @@ TextMesh:
   m_Anchor: 4
   m_Alignment: 1
   m_TabSize: 4
-  m_FontSize: 15
+  m_FontSize: 30
   m_FontStyle: 0
   m_RichText: 1
   m_Font: {fileID: 0}
@@ -225,7 +225,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 043ae9a8290159146bfa9acd392d0070, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  textSize: 30
+  textSize: 15
 --- !u!114 &114446242196572784
 MonoBehaviour:
   m_ObjectHideFlags: 1
