@@ -170,7 +170,9 @@ def four_point_trilateration(p, r):
     b = np.dot((p4 - p1), yn)
     c = np.dot((p4 - p1), zn)
     p4 = np.array([a, b, c])
-
+    print(a)
+    print(b)
+    print(c)
     d = np.dot(xn, v1)  # p1 = [0, 0, 0]
     i = np.dot(xn, v2)  # p2 = [d, 0, 0]
     j = np.dot(yn, v2)  # p3 = [i, j, 0]
