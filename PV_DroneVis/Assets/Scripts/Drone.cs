@@ -4,25 +4,23 @@ public class Drone : MonoBehaviour {
     public DroneData data; // Initial data from JSON
     public float speed = 1.0f; // Flight data segment time length (default one per second)
 
-    int step = 0;
-    float startTime = 0.0f;
+    Trajectory currentTrajectory;
+    int step;
+    float startTime;
     Vector3 segmentStart;
     Vector3 segmentEnd;
 
     // Use this for initialization
     void Start() {
-        // Move to next flight data segment every speed unit, disable if not enough points
-        if (data.flightData.Length > 1) {
-            InvokeRepeating("UpdatePosition", 0.0f, speed);
-        } else {
-            enabled = false;
-        }
+        currentTrajectory = data.trajectories[0];
+
+        BeginTravel();
     }
 
     // Update is called once per frame
     void Update() {
         // Disable UpdatePosition if we are on last flight data segment
-        if (step >= data.flightData.Length - 1) {
+        if (step >= currentTrajectory.data.Length - 1) {
             CancelInvoke("UpdatePosition");
 
             // Disable Update if we are at the end of movement
@@ -35,13 +33,38 @@ public class Drone : MonoBehaviour {
         transform.position = Vector3.Lerp(segmentStart, segmentEnd, Time.time - startTime); ;
     }
 
+    void BeginTravel() {
+        // Move to next flight data segment every speed unit, disable if not enough points
+        if (currentTrajectory.data.Length > 1) {
+            step = 0;
+            startTime = 0.0f;
+
+            if (enabled) {
+                CancelInvoke("UpdatePosition");
+                enabled = false;
+            }
+
+            InvokeRepeating("UpdatePosition", 0.0f, speed);
+            enabled = true;
+        }
+    }
+
     // Sets up data for next flight data segment
     void UpdatePosition() {
         step++;
         startTime = Time.time;
 
         // Setup next segment (from last to next step)
-        segmentStart = data.flightData[step - 1];
-        segmentEnd = data.flightData[step];
+        segmentStart = currentTrajectory.data[step - 1];
+        segmentEnd = currentTrajectory.data[step];
+    }
+
+    public void TrajectoryChanged(int trajectoryIndex) {
+        currentTrajectory = data.trajectories[trajectoryIndex];
+        BeginTravel();
+    }
+
+    public void Reset() {
+        BeginTravel();
     }
 }

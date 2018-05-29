@@ -1,8 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class DataReader : MonoBehaviour {
+public class Spawner : MonoBehaviour {
     [Serializable]
     public class Data {
         public BeaconData[] beacons;
@@ -13,6 +15,10 @@ public class DataReader : MonoBehaviour {
     public GameObject beaconObject;
     public GameObject droneObject;
     public Material trajectoryMaterial;
+    public Canvas canvas;
+    public GameObject trajectoryDropdown;
+
+    List<Drone> drones = new List<Drone>();
 
     // Use this for initialization
     void Awake() {
@@ -30,10 +36,17 @@ public class DataReader : MonoBehaviour {
             objectBeacon.name = beacon.name;
         }
 
-        foreach (DroneData drone in data.drones) {
+        for (int i = 0; i < data.drones.Length; i++) {
+            DroneData drone = data.drones[i];
+
             GameObject objectDrone = Instantiate(droneObject, drone.position, Quaternion.identity);
-            objectDrone.GetComponent<Drone>().data = drone;
+            Drone compDrone = objectDrone.GetComponent<Drone>();
+            drones.Add(compDrone);
+            compDrone.data = drone;
             objectDrone.name = drone.name;
+
+            //List<string> dropdownOptions = new List<string>();
+            List<Dropdown.OptionData> dropdownOptions = new List<Dropdown.OptionData>();
 
             // Draw Trajectories
             foreach (Trajectory trajectory in drone.trajectories) {
@@ -55,7 +68,38 @@ public class DataReader : MonoBehaviour {
                 lineTrajectory.name = trajectory.name;
                 lineTrajectory.positionCount = trajectory.data.Length;
                 lineTrajectory.SetPositions(trajectory.data);
+
+                // Add to selection
+                Texture2D dropTexture = new Texture2D(1, 1);
+                dropTexture.SetPixel(0, 0, randColor);
+                dropTexture.Apply();
+                Sprite dropImage = Sprite.Create(dropTexture, new Rect(0, 0, dropTexture.width, dropTexture.height), new Vector2(0, 0));
+                dropdownOptions.Add(new Dropdown.OptionData(trajectory.name, dropImage));
             }
+
+            // Create Dropdown for Trajectories selection
+            GameObject dropdown = Instantiate(trajectoryDropdown);
+            dropdown.transform.SetParent(canvas.transform, false);
+
+            // Set name and position
+            RectTransform dropdownRectTransform = dropdown.GetComponent<RectTransform>();
+            dropdownRectTransform.name = drone.name + " Trajectory Selection";
+            dropdownRectTransform.anchoredPosition3D = new Vector3(0, -30 * i, 0); // Move below previous
+            dropdown.GetComponentInChildren<Text>().text = drone.name + ":";
+
+            // Set options and register value changed event
+            Dropdown compDropdown = dropdown.GetComponent<Dropdown>();
+            compDropdown.AddOptions(dropdownOptions);
+
+            compDropdown.onValueChanged.AddListener(delegate {
+                compDrone.TrajectoryChanged(compDropdown.value);
+            });
+        }
+    }
+
+    public void ResetDrones() {
+        foreach (Drone drone in drones) {
+            drone.Reset();
         }
     }
 }
