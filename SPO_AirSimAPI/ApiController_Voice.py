@@ -3,12 +3,13 @@ import sys
 import signal
 import speech_recognition as sr
 
+
 def signal_handler(signal, frame):
-    print('You pressed Ctrl+C!')
+    print("You pressed Ctrl+C!")
     print("Exiting program")
     sys.exit(0)
 
-# MAIN
+
 if __name__ == '__main__':
     # connect to the AirSim simulator
     client = MultirotorClient()

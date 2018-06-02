@@ -84,7 +84,7 @@ rec = Receiver()
 
 
 def signal_handler(signal, frame):
-    print('You pressed Ctrl+C!')
+    print("You pressed Ctrl+C!")
     if rec.recording():
         rec.stop_inputs()
     print("Exiting program")
