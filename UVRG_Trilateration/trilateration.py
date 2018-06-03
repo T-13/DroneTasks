@@ -159,17 +159,6 @@ def four_point_trilateration(p, r):
     zn = v1xv2 / np.linalg.norm(v1xv2)
     yn = np.cross(xn, zn)
 
-<<<<<<< HEAD
-    # Calculate a,b and c from p4 and others locations
-    a = np.dot((p4 - p1), xn)
-    b = np.dot((p4 - p1), yn)
-    c = np.dot((p4 - p1), zn)
-    p4 = np.array([a, b, c])
-    print(a)
-    print(b)
-    print(c)
-=======
->>>>>>> c627651e4ba4c5b1bb5c0f33216c374f504474bf
     d = np.dot(xn, v1)  # p1 = [0, 0, 0]
     i = np.dot(xn, v2)  # p2 = [d, 0, 0]
     j = np.dot(yn, v2)  # p3 = [i, j, 0]

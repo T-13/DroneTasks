@@ -32,63 +32,40 @@ def main():
         r.append(distance)
 
     r = np.array(r)
+
+    print("R: " + str(r) + "\n")
+
     deltaP = []
 
-    for i in range(1, len(r) + 1):
+    for i in range(1, len(p)):
         deltaP.append(np.array([p[i][0]-p[0][0], p[i][1]-p[0][1], p[i][2]-p[0][2]]))
 
     deltaP = np.array(deltaP)
 
-    k = 4
     h = len(deltaP)
 
-    Matrix = [[0 for x in range(h+1)] for y in range(h)]
-    for i in range(0, len(deltaP)):
-        Matrix[i][0] = ((2 * deltaP[i][0])/(r[i])) - ((2 * deltaP[0][0]) / (r[0]))
-        Matrix[i][1] = ((2 * deltaP[i][1])/(r[i])) - ((2 * deltaP[0][1]) / (r[0]))
-        Matrix[i][2] = ((2 * deltaP[i][2])/(r[i])) - ((2 * deltaP[0][2]) / (r[0]))
-        Matrix[i][3] = r[i] - r[0] - (deltaP[i][0] ** 2 + deltaP[i][1] ** 2 + deltaP[i][2] ** 2) / r[i] + (deltaP[0][0] ** 2 + deltaP[0][1] ** 2 + deltaP[0][2] ** 2) / r[0]
+    A = [[0 for x in range(h - 1)] for y in range(h - 1)]
+    b = [[0 for x in range(1)] for y in range(h - 1)]
 
-    Matrix = np.array(Matrix)
-    print(Matrix)
-    print(gauss(Matrix))
+    print("deltaP :\n" + str(deltaP) + "\n")
+    print("r: " +str(r) + "\n")
 
+    for i in range(1, len(deltaP)):
+        A[i-1][0] = ((2 * deltaP[i][0])/(r[i])) - ((2 * deltaP[0][0]) / (r[0]))
+        A[i-1][1] = ((2 * deltaP[i][1])/(r[i])) - ((2 * deltaP[0][1]) / (r[0]))
+        A[i-1][2] = ((2 * deltaP[i][2])/(r[i])) - ((2 * deltaP[0][2]) / (r[0]))
+        b[i-1][0] = r[i] - r[0] - (deltaP[i][0] ** 2 + deltaP[i][1] ** 2 + deltaP[i][2] ** 2) / r[i] + (deltaP[0][0] ** 2 + deltaP[0][1] ** 2 + deltaP[0][2] ** 2) / r[0]
 
-def gauss(A):
-    n = len(A)
+    A = np.array(A)
 
-    for i in range(0, n):
-        # Search for maximum in this column
-        maxEl = abs(A[i][i])
-        maxRow = i
-        for k in range(i+1, n):
-            if abs(A[k][i]) > maxEl:
-                maxEl = abs(A[k][i])
-                maxRow = k
+    print("P: " + str(p[0]) + "\n") 
 
-        # Swap maximum row with current row (column by column)
-        for k in range(i, n+1):
-            tmp = A[maxRow][k]
-            A[maxRow][k] = A[i][k]
-            A[i][k] = tmp
+    gauss = np.linalg.solve(A, b).flatten()
+    
+    res = gauss+ p[0]
 
-        # Make all rows below this one 0 in current column
-        for k in range(i+1, n):
-            c = -A[k][i]/A[i][i]
-            for j in range(i, n+1):
-                if i == j:
-                    A[k][j] = 0
-                else:
-                    A[k][j] += c * A[i][j]
-
-    # Solve equation Ax=b for an upper triangular matrix A
-    x = [0 for i in range(n)]
-    for i in range(n-1, -1, -1):
-        x[i] = A[i][n]/A[i][i]
-        for k in range(i-1, -1, -1):
-            A[k][n] -= A[k][i] * x[i]
-    return x
+    print("Gauss: " + str(gauss)  + "\n")
+    print("RES: " + str(res)  + "\n")
 
 if __name__ == "__main__":
     sys.exit(main())
-
