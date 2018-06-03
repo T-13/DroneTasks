@@ -9,7 +9,8 @@ import numpy as np
 
 def main():
     # Parse arguments
-    parser = argparse.ArgumentParser(description="Trilateration")
+    parser = argparse.ArgumentParser(
+        description="Trilateration requiring time synchronization only between base stations.")
 
     for i in range(1, 11):
         parser.add_argument(
@@ -19,7 +20,8 @@ def main():
             "-t{}".format(i), type=float, metavar=("t"),
             help="time of received signal form {}. base station".format(i), required=i < 4)
 
-    parser.add_argument("-s", type=float, default=343.0, help="speed of sound (default: 343.0)", required=False)
+    parser.add_argument(
+        "-s", type=float, default=343.0, metavar=("sos"), help="speed of sound (default: 343.0)", required=False)
     args = parser.parse_args()
 
     # Positions
