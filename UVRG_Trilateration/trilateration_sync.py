@@ -18,7 +18,7 @@ def main():
             help="{}. base station position".format(i), required=i < 4)
         parser.add_argument(
             "-t{}".format(i), type=float, metavar=("t"),
-            help="time of received signal form {}. base station".format(i), required=i < 4)
+            help="time of received signal from {}. base station".format(i), required=i < 4)
 
     parser.add_argument(
         "-s", type=float, default=343.0, metavar=("sos"), help="speed of sound (default: 343.0)", required=False)
