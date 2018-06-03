@@ -60,7 +60,7 @@ def main():
 
     print("P: " + str(p[0]) + "\n") 
 
-    gauss = np.linalg.solve(A, b).flatten()
+    gauss = np.linalg.lstsq(A, b)[0].flatten()
     
     res = gauss+ p[0]
 
