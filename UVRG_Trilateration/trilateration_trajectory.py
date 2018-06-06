@@ -15,8 +15,8 @@ def main():
     parser.add_argument("-f", type=str, metavar=("file"), help="file with data", required=True)
     parser.add_argument("-v", type=str, default="", metavar=("validation file"),
                         help="file with solutions for validation", required=True)
-    parser.add_argument("-s", type=float, default=343.0, metavar=("sos"),
-                        help="speed of sound (default: 343.0)", required=False)
+    parser.add_argument("-s", type=float, default=343.0, metavar=("speed"),
+                        help="signal speed in m/s (default: 343.0)", required=False)
     args = parser.parse_args()
 
     # Check if files exists
