@@ -63,7 +63,7 @@ def main():
                 p.append(all_positions[all_positions_i])
                 t.append(time)
 
-            # Convert into NumPy array for unison shuffling
+            # Convert into NumPy array for advanced indexing
             p, t = np.array(p), np.array(t)
 
             # Calculate trilateration
@@ -77,20 +77,19 @@ def main():
                 print([round(i, ROUND_TO) for i in res])
             else:
                 # Pick random unique combinations of stations
-                rand = np.arange(amount)
                 rand_p, rand_r = [], []
 
                 while len(rand_p) < amount:
                     # Randomize and pick first 5
-                    np.random.shuffle(rand)
-                    p, t = p[rand], t[rand]
+                    idx = np.random.choice(np.arange(amount), 5, replace=False)
+                    p_sample, t_sample = p[idx], t[idx]
 
                     # Calculate distances from main station to other stations given times and speed of sound
-                    r = [args.s * (t[i] - t[0]) for i in range(1, amount)]
+                    r = [args.s * (t_sample[i] - t_sample[0]) for i in range(1, len(t_sample))]
 
                     # Always pick different set of stations
-                    if not already_used_stations(p[0:5], rand_p):
-                        rand_p.append(p[0:5])
+                    if not already_used_stations(p_sample[0:5], rand_p):
+                        rand_p.append(p_sample[0:5])
                         rand_r.append(r[0:5])
 
                 P = np.array([0.0, 0.0, 0.0])  # End result
