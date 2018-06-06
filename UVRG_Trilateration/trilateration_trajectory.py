@@ -11,7 +11,7 @@ ROUND_TO = 5
 
 def main():
     # Parse arguments
-    parser = argparse.ArgumentParser(description="Trilateration based on time from data in file.")
+    parser = argparse.ArgumentParser(description="Trilateration of object's trajectory (measurement snapshots).")
     parser.add_argument("-f", type=str, metavar=("file"), help="file with data", required=True)
     parser.add_argument("-v", type=str, default="", metavar=("validation file"),
                         help="file with solutions for validation", required=True)
