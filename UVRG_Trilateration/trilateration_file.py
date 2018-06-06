@@ -94,14 +94,10 @@ def main():
                         rand_r.append(r[0:5])
 
                 P = np.array([0.0, 0.0, 0.0])  # End result
-                positions = []
 
-                # Calculate all positions
+                # Calculate for all randomly selected position combinations
                 for pos, r_pos in zip(rand_p, rand_r):
-                    # Calculate for current 5 stations
-                    res = trilaterate_sync(pos, r_pos)
-                    positions.append(res)
-                    P += res
+                    P += trilaterate_sync(pos, r_pos)
 
                 # Average
                 P /= amount
