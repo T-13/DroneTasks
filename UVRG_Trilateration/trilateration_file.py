@@ -3,7 +3,6 @@
 import sys
 import os
 import argparse
-import random
 import math
 import numpy as np
 
@@ -49,7 +48,8 @@ def main():
         while True:
             # Read amount of stations in current snapshot (exit if EOF)
             snapshot = file.readline()
-            if not snapshot: break
+            if not snapshot:
+                break
 
             amount = int(snapshot)
 
