@@ -80,7 +80,7 @@ def main():
                 rand_p, rand_r = [], []
 
                 while len(rand_p) < amount:
-                    # Randomize and pick first 5
+                    # Pick random 5
                     idx = np.random.choice(np.arange(amount), 5, replace=False)
                     p_sample, t_sample = p[idx], t[idx]
 
