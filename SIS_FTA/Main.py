@@ -17,12 +17,12 @@ if __name__ == '__main__':
     # Load file
     sound = pydub.AudioSegment.from_file(args.f)
     sound_samples = sound.get_array_of_samples()
-    print("Loaded file" + args.f + "\n")
+    print("Loaded file {}\n".format(args.f))
 
     # STFT arguments
-    NFFT = 192              # The number of data points used in each block for the FFT. A power 2 is most efficient.
-    Fs = sound.frame_rate   # The sampling frequency (samples per time unit).
-    Overlap = NFFT/8           # The number of points of overlap between blocks.
+    NFFT = 192             # The number of data points used in each block for the FFT. A power 2 is most efficient.
+    Fs = sound.frame_rate  # The sampling frequency (samples per time unit).
+    Overlap = NFFT / 8     # The number of points of overlap between blocks.
 
     # Optimal length for stft to calculate quickly (divide and conquer algorithm)
     good_size = fftpack.helper.next_fast_len(NFFT)
@@ -31,9 +31,8 @@ if __name__ == '__main__':
     # freq - 1d array:  The frequencies corresponding to the rows in spectrum
     # bins - 1d array:  The times corresponding to midpoints of segments (i.e., the columns in spectrum)
     # im   - AxesImage: The image created by imshow containing the spectrogram
-    spectrum, freqs, bins, im = plt.specgram(sound_samples, NFFT=NFFT, Fs=Fs, pad_to=good_size,
-                                                                   noverlap=Overlap,
-                                                                   cmap=plt.cm.get_cmap('magma'))
+    spectrum, freqs, bins, im = plt.specgram(
+        sound_samples, NFFT=NFFT, Fs=Fs, pad_to=good_size, noverlap=Overlap, cmap=plt.cm.get_cmap('magma'))
 
     # Calculate time accuracy
     time_step = bins[0] * 2

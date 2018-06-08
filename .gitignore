@@ -99,3 +99,13 @@ ENV/
 
 # mypy
 .mypy_cache/
+
+
+# PyCharm
+.idea
+
+# Archives
+*.zip
+
+# Sound files
+*.wav
