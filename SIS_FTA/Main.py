@@ -40,35 +40,54 @@ if __name__ == '__main__':
     freq_step = freqs[1]
 
     # Get the freq of the 2 beeps
-    freq_one = int(2000 / freq_step)
-    freq_two = int(3000 / freq_step)
-
-    # Set threshold of beep
-    threshold = 0.5
+    freq_one = int(round(2000 / freq_step))
+    freq_two = int(round(3000 / freq_step))
 
     # Normalize values for freq_one and freq_two
     freq_one_norm = np.array(spectrum[freq_one] / max(spectrum[freq_one]), dtype=np.float32)
     freq_two_norm = np.array(spectrum[freq_two] / max(spectrum[freq_two]), dtype=np.float32)
+    # Filter normalized values
+    fre_one_norm_filtered = np.convolve(freq_one_norm, np.ones((30,)) / 30, mode='same')
+    fre_two_norm_filtered = np.convolve(freq_two_norm, np.ones((30,)) / 30, mode='same')
+    # Set threshold of beep
+    threshold = 0.003
 
-    # Get frequency timestamps
+    # Binarize the filtered output
+    freq_one_bin = []
+    freq_two_bin = []
+    for i in range(0, len(bins)):
+        if fre_one_norm_filtered[i] > threshold:
+            freq_one_bin.append(1)
+
+        elif fre_one_norm_filtered[i] < threshold:
+            freq_one_bin.append(0)
+
+        if fre_two_norm_filtered[i] > threshold:
+            freq_two_bin.append(1)
+
+        elif fre_two_norm_filtered[i] < threshold:
+            freq_two_bin.append(0)
+
+    # Get timestamps from binarized output
     freq_one_timestamps = []
     freq_two_timestamps = []
     freq_one_state = False
     freq_two_state = False
     for i in range(0, len(bins)):
-        if freq_one_norm[i] > threshold and not freq_one_state:
+        if freq_one_bin[i] == 1 and not freq_one_state:
             freq_one_timestamps.append(i)
             freq_one_state = not freq_one_state
-        elif freq_one_norm[i] < threshold and freq_one_state:
+        elif freq_one_bin[i] == 0 and freq_one_state:
             freq_one_timestamps.append(i)
             freq_one_state = not freq_one_state
 
-        if freq_two_norm[i] > threshold and not freq_two_state:
+        if freq_two_bin[i] == 1 and not freq_two_state:
             freq_two_timestamps.append(i)
             freq_two_state = not freq_two_state
-        elif freq_two_norm[i] < threshold and freq_two_state:
+        elif freq_two_bin[i] == 0 and freq_two_state:
             freq_two_timestamps.append(i)
             freq_two_state = not freq_two_state
+
 
     # Print result
     print("Completed STFT\nTime accuracy: {}\nFq accuracy: {}\n".format(time_step, freq_step))
@@ -79,4 +98,13 @@ if __name__ == '__main__':
     # Draw graph
     plt.ylabel("Frequency (Hz)")
     plt.xlabel("Time (s)")
+    plt.show()
+
+    plt.plot(bins, freq_one_norm)
+    plt.show()
+
+    plt.plot(bins, freq_one_bin)
+    plt.show()
+
+    plt.plot(bins, fre_one_norm_filtered)
     plt.show()
