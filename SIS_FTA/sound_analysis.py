@@ -9,14 +9,14 @@ from scipy import fftpack, constants
 
 def main():
     # Parse arguments
-    parser = argparse.ArgumentParser(description="Sound analysis")
+    parser = argparse.ArgumentParser(description="Frequency-Time Sound Analysis")
     parser.add_argument("-f", type=str, metavar="file", help="input sound file", required=True)
-    parser.add_argument(
-        "-t", type=float, default=0.003, metavar="threshold", help="amplitude threshold", required=False)
-    parser.add_argument(
-        "-f1", type=int, default=2000, metavar="frequency 1", help="frequency of 1. beep", required=False)
-    parser.add_argument(
-        "-f2", type=int, default=3000, metavar="frequency 2", help="frequency of 2. beep", required=False)
+    parser.add_argument("-t", type=float, default=0.003, metavar="threshold",
+                        help="amplitude threshold (default: 0.003)", required=False)
+    parser.add_argument("-f1", type=int, default=2000, metavar="frequency 1",
+                        help="frequency of 1. beep (default: 2000)", required=False)
+    parser.add_argument("-f2", type=int, default=3000, metavar="frequency 2",
+                        help="frequency of 2. beep (default: 3000)", required=False)
     args = parser.parse_args()
 
     file, threshold, freq_one, freq_two = args.f, args.t, args.f1, args.f2
