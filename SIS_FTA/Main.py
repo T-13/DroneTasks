@@ -63,8 +63,8 @@ def main():
     freq_two_i = int(round(freq_two / freq_step))
 
     # Normalize values
-    freq_one_norm = np.array(spectrum[freq_one_i] / max(spectrum[freq_one_i]), dtype=np.float64)
-    freq_two_norm = np.array(spectrum[freq_two_i] / max(spectrum[freq_two_i]), dtype=np.float64)
+    freq_one_norm = np.array(spectrum[freq_one_i] / max(spectrum[freq_one_i]))
+    freq_two_norm = np.array(spectrum[freq_two_i] / max(spectrum[freq_two_i]))
 
     # Filter normalized values
     freq_one_norm_filt = np.convolve(freq_one_norm, np.ones((30,)) / 30, mode='same')
@@ -100,12 +100,12 @@ def main():
         time_dif = freq_one_timestamps[i] - freq_two_timestamps[i]
         offsets.append(time_dif * constants.speed_of_sound)
         if i % 2 != 0:
-            middle = np.linspace(offsets[i-1], offsets[i], bins_one_i[i] - len(offsets_all))
+            middle = np.linspace(offsets[i - 1], offsets[i], bins_one_i[i] - len(offsets_all))
             offsets_all = np.append(offsets_all, middle)
     offsets_all = np.append(offsets_all, np.zeros(len(bins) - len(offsets_all)))
 
     # Normalize to account for errors
-    offsets_all = np.array(offsets_all / (2*max(offsets_all)), dtype=np.float64)
+    offsets_all = np.array(offsets_all / (2 * max(offsets_all)))
 
     # Print results
     print("Completed STFT:")
@@ -114,20 +114,20 @@ def main():
 
     print("Frequency 1:")
     print("- Approximation: {} Hz".format(freqs[freq_one_i]))
-    print("- Start times(s): {}".format(freq_one_timestamps[0::2]))
-    print("- End times(s): {}\n".format(freq_one_timestamps[1::2]))
+    print("- Start times (s): {}".format(freq_one_timestamps[0::2]))
+    print("- End times (s): {}\n".format(freq_one_timestamps[1::2]))
 
     print("Frequency 2:")
     print("- Approximation: {} Hz".format(freqs[freq_two_i]))
-    print("- Start times(s): {}".format(freq_two_timestamps[0::2]))
-    print("- End times(s): {}\n".format(freq_two_timestamps[1::2]))
+    print("- Start times (s): {}".format(freq_two_timestamps[0::2]))
+    print("- End times (s): {}\n".format(freq_two_timestamps[1::2]))
 
-    print("Offset approximations:")
-    print("| 0 - Middle | less than 0 - to the left | bigger than 0 - to the right |")
-    print("Smallest error: {} m".format(time_step * constants.speed_of_sound))
-    print("Approximations(m): {}".format(offsets))
+    print("Offset approximations (0 - middle, <0 - left, >0 - right):")
+    print("- Smallest error: {} m".format(time_step * constants.speed_of_sound))
+    print("- Approximations (m): {}".format(offsets))
 
     # Draw graphs
+    plt.suptitle("Sound Analysis\nSpectrogram - Normalized - Filtered - Binarized - Distance")
     axes[0].set_ylabel("Freq (Hz)")
 
     axes[1].plot(bins, freq_one_norm)
@@ -135,17 +135,19 @@ def main():
 
     axes[2].plot(bins, freq_one_norm_filt)
     axes[2].plot(bins, freq_two_norm_filt)
-    axes[2].set_ylabel("Amplitude")
 
     axes[3].plot(bins, freq_one_bin)
     axes[3].plot(bins, freq_two_bin)
 
-    axes[4].plot(bins, offsets_all)
+    axes[4].plot(bins, offsets_all, color="k")
     axes[4].set_ylabel("Dist (m)")
 
-    axes[4].set_xlabel("Time (s)")  # ALl plots display time on x axis
+    axes[2].set_ylabel("Amplitude")  # All but first plot share y label
+    axes[4].set_xlabel("Time (s)")  # All plots display time on x axis
     fig.subplots_adjust(hspace=0.1)  # Bring subplots close to each other
-    [ax.label_outer() for ax in axes]  # Hide x labels and ticks for all but bottom plot
+    [ax.label_outer() for ax in axes]  # Hide x labels and ticks for all but buttom plot
+    axes[1].legend(["{} Hz".format(freq_one), "{} Hz".format(freq_two)])  # Create legend on first frequencies graph
+
     plt.show()
 
 
