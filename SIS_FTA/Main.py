@@ -4,7 +4,7 @@ import argparse
 from pydub import AudioSegment, exceptions
 import matplotlib.pyplot as plt
 import numpy as np
-from scipy import fftpack
+from scipy import fftpack, constants
 
 
 def main():
@@ -37,12 +37,12 @@ def main():
         print("Loaded file {}\n".format(file))
 
     # Prepare graph axes
-    fig, axes = plt.subplots(4, sharex=True)
+    fig, axes = plt.subplots(5, sharex=True)
 
     # STFT arguments
     NFFT = 192             # Number of data points used in each block for the FFT (power 2 is most efficient)
     Fs = sound.frame_rate  # Sampling frequency (samples per time unit)
-    Overlap = NFFT / 8     # Number of points of overlap between blocks
+    Overlap = NFFT / 4     # Number of points of overlap between blocks
 
     # Optimal length for stft to calculate quickly (divide and conquer algorithm)
     good_size = fftpack.helper.next_fast_len(NFFT)
@@ -63,8 +63,8 @@ def main():
     freq_two_i = int(round(freq_two / freq_step))
 
     # Normalize values
-    freq_one_norm = np.array(spectrum[freq_one_i] / max(spectrum[freq_one_i]), dtype=np.float32)
-    freq_two_norm = np.array(spectrum[freq_two_i] / max(spectrum[freq_two_i]), dtype=np.float32)
+    freq_one_norm = np.array(spectrum[freq_one_i] / max(spectrum[freq_one_i]), dtype=np.float64)
+    freq_two_norm = np.array(spectrum[freq_two_i] / max(spectrum[freq_two_i]), dtype=np.float64)
 
     # Filter normalized values
     freq_one_norm_filt = np.convolve(freq_one_norm, np.ones((30,)) / 30, mode='same')
@@ -82,27 +82,50 @@ def main():
     # Get timestamps from binarized output
     freq_one_timestamps, freq_two_timestamps = [], []
     freq_one_state, freq_two_state = False, False
+    bins_one_i = []
     for i in range(0, len(bins)):
         if (freq_one_bin[i] == 1 and not freq_one_state) or (freq_one_bin[i] == 0 and freq_one_state):
-            freq_one_timestamps.append(i)
+            freq_one_timestamps.append(bins[i])
+            bins_one_i.append(i)
             freq_one_state = not freq_one_state
 
         if (freq_two_bin[i] == 1 and not freq_two_state) or (freq_two_bin[i] == 0 and freq_two_state):
-            freq_two_timestamps.append(i)
+            freq_two_timestamps.append(bins[i])
             freq_two_state = not freq_two_state
+
+    # Calculate offsets from middle
+    offsets = []
+    offsets_all = np.zeros(bins_one_i[0])
+    for i in range(0, len(freq_one_timestamps)):
+        time_dif = freq_one_timestamps[i] - freq_two_timestamps[i]
+        offsets.append(time_dif * constants.speed_of_sound)
+        if i % 2 != 0:
+            middle = np.linspace(offsets[i-1], offsets[i], bins_one_i[i] - len(offsets_all))
+            offsets_all = np.append(offsets_all, middle)
+    offsets_all = np.append(offsets_all, np.zeros(len(bins) - len(offsets_all)))
+
+    # Normalize to account for errors
+    offsets_all = np.array(offsets_all / (2*max(offsets_all)), dtype=np.float64)
 
     # Print results
     print("Completed STFT:")
-    print("- Time accuracy: {}".format(time_step))
-    print("- Frequency accuracy: {}\n".format(freq_step))
+    print("- Time accuracy: {} s".format(time_step))
+    print("- Frequency accuracy: {} Hz\n".format(freq_step))
 
     print("Frequency 1:")
-    print("- Start times: {}".format(freq_one_timestamps[0::2]))
-    print("- End times: {}\n".format(freq_one_timestamps[1::2]))
+    print("- Approximation: {} Hz".format(freqs[freq_one_i]))
+    print("- Start times(s): {}".format(freq_one_timestamps[0::2]))
+    print("- End times(s): {}\n".format(freq_one_timestamps[1::2]))
 
     print("Frequency 2:")
-    print("- Start times: {}".format(freq_two_timestamps[0::2]))
-    print("- End times: {}".format(freq_two_timestamps[1::2]))
+    print("- Approximation: {} Hz".format(freqs[freq_two_i]))
+    print("- Start times(s): {}".format(freq_two_timestamps[0::2]))
+    print("- End times(s): {}\n".format(freq_two_timestamps[1::2]))
+
+    print("Offset approximations:")
+    print("| 0 - Middle | less than 0 - to the left | bigger than 0 - to the right |")
+    print("Smallest error: {} m".format(time_step * constants.speed_of_sound))
+    print("Approximations(m): {}".format(offsets))
 
     # Draw graphs
     axes[0].set_ylabel("Freq (Hz)")
@@ -117,10 +140,12 @@ def main():
     axes[3].plot(bins, freq_one_bin)
     axes[3].plot(bins, freq_two_bin)
 
-    axes[3].set_xlabel("Time (s)")  # ALl plots display time on x axis
-    fig.subplots_adjust(hspace=0)  # Bring subplots close to each other
-    [ax.label_outer() for ax in axes]  # Hide x labels and ticks for all but buttom plot
+    axes[4].plot(bins, offsets_all)
+    axes[4].set_ylabel("Dist (m)")
 
+    axes[4].set_xlabel("Time (s)")  # ALl plots display time on x axis
+    fig.subplots_adjust(hspace=0.1)  # Bring subplots close to each other
+    [ax.label_outer() for ax in axes]  # Hide x labels and ticks for all but bottom plot
     plt.show()
 
 
