@@ -68,44 +68,24 @@ def main():
 
             # Calculate trilateration
             if amount < 5:
-                print("Error! Less than 5 stations given!")
-            elif amount == 5:
+                print("Error! Less than 5 stations given in snapshot!")
+            else:
                 # Calculate distances from main station to other stations given times and speed of sound
                 r = [args.s * (t[i] - t[0]) for i in range(1, amount)]
 
                 res = trilaterate_sync(p, r)
-                print([round(i, ROUND_TO) for i in res])
-            else:
-                # Pick random unique combinations of stations
-                rand_p, rand_r = [], []
+                err_sqrt = np.linalg.norm(res - solutions[amount_snapshots])
+                print("{}\t(valid: {}\t=> RMSE: {})"
+                      .format([round(i, ROUND_TO) for i in res],
+                              solutions[amount_snapshots],
+                              round(err_sqrt**2, ROUND_TO)))
 
-                while len(rand_p) < amount:
-                    # Pick random 5
-                    idx = np.random.choice(np.arange(amount), 5, replace=False)
-                    p_sample, t_sample = p[idx], t[idx]
-
-                    # Calculate distances from main station to other stations given times and speed of sound
-                    r = [args.s * (t_sample[i] - t_sample[0]) for i in range(1, len(t_sample))]
-
-                    # Always pick different set of stations
-                    if not already_used_stations(p_sample[0:5], rand_p):
-                        rand_p.append(p_sample[0:5])
-                        rand_r.append(r[0:5])
-
-                P = np.array([0.0, 0.0, 0.0])  # End result
-
-                # Calculate for all randomly selected position combinations
-                for pos, r_pos in zip(rand_p, rand_r):
-                    P += trilaterate_sync(pos, r_pos)
-
-                # Average
-                P /= amount
-
-                # Add to global error
-                all_err += np.linalg.norm(P - solutions[amount_snapshots])**2
+                all_err += err_sqrt
                 amount_snapshots += 1
 
-                print([round(i, ROUND_TO) for i in P])
+        if amount_snapshots == 0:
+            print("Error! No valid snapshots given!")
+            return 1
 
         # Trajectory error
         all_err = math.sqrt(all_err / amount_snapshots)
@@ -159,7 +139,8 @@ def trilaterate_sync(p, r):
     gauss = np.linalg.lstsq(a, b, rcond=None)[0].flatten()
 
     # Base result off of original position
-    return p[0] - gauss
+    # Only first 3 values should contain solution, rest should be 0
+    return p[0] - gauss[:3]
 
 
 if __name__ == "__main__":
