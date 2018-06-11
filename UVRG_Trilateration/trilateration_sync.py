@@ -2,7 +2,6 @@
 
 import sys
 import argparse
-import random
 import math
 import numpy as np
 
@@ -21,7 +20,7 @@ def main():
             help="time of received signal from {}. base station".format(i), required=i < 4)
 
     parser.add_argument(
-        "-s", type=float, default=343.0, metavar=("sos"), help="speed of sound (default: 343.0)", required=False)
+        "-s", type=float, default=343.0, metavar=("speed"), help="signal speed in m/s (default: 343.0)", required=False)
     args = parser.parse_args()
 
     # Positions
@@ -31,9 +30,9 @@ def main():
     # Times
     t = [args.t1, args.t2, args.t3, args.t4, args.t5, args.t6, args.t7, args.t8, args.t9, args.t10]
 
-    # Remove all unset args
-    p = [x for x in p if x.any()]
-    t = [x for x in t if x is not None]
+    # Remove all unset args and convert into NumPy array for advanced indexing
+    p = np.array([x for x in p if x.any()])
+    t = np.array([x for x in t if x is not None])
 
     # At least 5 reference positions are required
     if len(p) < 5:
@@ -46,21 +45,20 @@ def main():
         print([round(i, 2) for i in res])
     else:
         # Pick random unique combinations of stations
-        rand_p = []
-        rand_r = []
-        shuffled_p = p.copy()  # Copy for shuffling
+        rand_p, rand_r = [], []
 
         while len(rand_p) < len(p):
-            # Randomize and pick first 5
-            random.shuffle(shuffled_p)
+            # Pick random 5
+            idx = np.random.choice(np.arange(len(p)), 5, replace=False)
+            p_sample, t_sample = p[idx], t[idx]
 
             # Calculate distances from main station to other stations given times and speed of sound
-            shuffled_r = [args.s * (t[i] - t[0]) for i in range(1, len(shuffled_p))]
+            r = [args.s * (t_sample[i] - t_sample[0]) for i in range(1, len(t_sample))]
 
             # Always pick different set of stations
-            if not already_used_stations(shuffled_p[0:5], rand_p):
-                rand_p.append(shuffled_p[0:5])
-                rand_r.append(shuffled_r[0:5])
+            if not already_used_stations(p_sample[0:5], rand_p):
+                rand_p.append(p_sample[0:5])
+                rand_r.append(r[0:5])
 
         P = np.array([0.0, 0.0, 0.0])  # End result
         positions = []
