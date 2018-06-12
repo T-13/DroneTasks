@@ -31,7 +31,7 @@ def main():
     with open(args.v, "r") as file:
         solutions = [[float(x) for x in x.split()] for x in file.read().split('\n')]
 
-    # Read data from givne file
+    # Read data from given file
     with open(args.f, "r") as file:
         # Read amount of stations
         all_amount = int(file.readline())
@@ -92,24 +92,6 @@ def main():
         print("RMSE: {}".format(round(all_err, ROUND_TO)))
 
     return 0
-
-
-def already_used_stations(current, previous):
-    # Check if current 5 stations had already been used
-    for p in previous:
-        match = 0
-        for point in p:
-            all_0 = (point == current[0]).all()
-            all_1 = (point == current[1]).all()
-            all_2 = (point == current[2]).all()
-            all_3 = (point == current[3]).all()
-            all_4 = (point == current[4]).all()
-            if all_0 or all_1 or all_2 or all_3 or all_4:
-                match += 1
-        if match == 5:
-            return True
-
-    return False
 
 
 def trilaterate_sync(p, r):
