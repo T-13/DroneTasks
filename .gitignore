@@ -138,6 +138,7 @@ ENV/
 *.hex
 
 # Debug files
+**/Debug/
 *.dSYM/
 *.su
 *.list
@@ -149,7 +150,7 @@ ENV/
 .code_review_properties
 
 # STM32CubeMX Unneeded Drivers (development on F4)
-**/CMSIS/Device/ST/STM32F4xx/Source
+**/CMSIS/Device/ST/STM32F4xx/Source/
 **/CMSIS/Include/arm_common_tables.h
 **/CMSIS/Include/arm_const_structs.h
 **/CMSIS/Include/arm_math.h
