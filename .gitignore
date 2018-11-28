@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# C extensions
-*.so
-
 # Distribution / packaging
 .Python
 env/
@@ -109,3 +106,59 @@ ENV/
 
 # Sound files
 *.wav
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/
+*.su
+*.list
+*.map
+
+# Atollic TrueSTUDIO IDE
+.metadata/
+.settings/
+.code_review_properties
+
+# STM32CubeMX Unneeded Drivers (development on F4)
+**/CMSIS/Device/ST/STM32F4xx/Source
+**/CMSIS/Include/arm_common_tables.h
+**/CMSIS/Include/arm_const_structs.h
+**/CMSIS/Include/arm_math.h
+**/CMSIS/Include/cmsis_armcc.h
+**/CMSIS/Include/cmsis_armcc_V6.h
+**/CMSIS/Include/core_cm0.h
+**/CMSIS/Include/core_cm0plus.h
+**/CMSIS/Include/core_cm3.h
+**/CMSIS/Include/core_cm7.h
+**/CMSIS/Include/core_sc000.h
+**/CMSIS/Include/core_sc300.h
+
