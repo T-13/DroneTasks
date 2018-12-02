@@ -3,7 +3,7 @@ var camera = new THREE.PerspectiveCamera(75, 1, 0.1, 1000);
 camera.position.z = 3;
 var renderer = new THREE.WebGLRenderer();
 renderer.setSize(240, 240);
-container = document.getElementById( 'canvas1' );
+container = document.getElementById('canvas1');
 container.appendChild(renderer.domElement);
 
 
@@ -33,7 +33,7 @@ mtlLoader.load('Drone_obj.mtl', function (materials) {
     objLoader.load('Drone_obj.obj', function (object) {
         scene.add(object);
         object.position.z = 0;
-        object.scale.set( 3, 3, 3 )
+        object.scale.set(3, 3, 3)
     });
 });
 
