@@ -1,4 +1,4 @@
-# FERI-DroneTasks
+# DroneTasks
 
 Drone project tasks in second and third year at FERI, containing various tasks done as project assignments.
 
