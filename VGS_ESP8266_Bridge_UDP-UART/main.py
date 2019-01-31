@@ -7,7 +7,7 @@ from machine import UART
 AP_NAME = "PixRacer"
 AP_PASS = "pixracer"
 HOST = "0.0.0.0"
-PORT = 14450
+PORT = 14550
 UART_PIN = 0
 BAUDRATE = 115200
 
